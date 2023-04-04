@@ -57,7 +57,7 @@
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     {% if request.user.username %}
 
-                    <a href="#"
+                    <a href="{% url 'accounts:logout' %}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         aria-current="page">Logout</a>
 
@@ -83,10 +83,10 @@
                         </div>
                     </div>
                     {% else %}
-                    <a href="#"
+                    <a href="{% url 'accounts:register' %}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         aria-current="page">Register</a>
-                    <a href="#"
+                    <a href="{% url 'accounts:login' %}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         aria-current="page">Login</a>
                     {% endif %}
