@@ -7,7 +7,7 @@ from random import sample
 
 @login_required
 def index(request):
-    if not request.user.groups.filter(name="pushup").exist():
+    if not request.user.groups.filter(name="pushup").exists():
         return redirect("core:index")
     return render(request, "pushups/index.html")
 
