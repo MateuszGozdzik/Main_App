@@ -5,7 +5,7 @@ import random
 from django.conf import settings
 
 
-def get_photos():
+def get_photos(special_photos_user: bool):
 
     creds = Credentials.from_service_account_info({
         "type": "service_account",
@@ -20,30 +20,25 @@ def get_photos():
         "client_x509_cert_url": settings.DRIVE_CLIENT_X509_CERT_URL
     })
     service = build('drive', 'v3', credentials=creds)
-
-    # Define the folder ID of the public folder containing the photos
     folder_id = '15Y7olgVeeHq81NiTjGFEjvh4RW0bEEtR'
+    special_folder_id = '1eJ3tUbQHl5Ghl83phldn8NqaEXxI_Rvj'
 
     # Fetch the list of image files from the folder
-    results = service.files().list(
-        q="mimeType contains 'image/' and trashed=false and '{}' in parents".format(
-            folder_id),
-        fields="nextPageToken, files(id, name, webViewLink)").execute()
+    results = service.files().list(q=f"mimeType contains 'image/' and trashed=false and '{folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
     items = results.get('files', [])
-
-    # Get the public links for the photos
-    photo_links = {}
-    if items:
-        for item in items:
-            photo_links[item['name']] = item['webViewLink']
-    return photo_links
+    if special_photos_user:
+        results2 = service.files().list(q=f"mimeType contains 'image/' and trashed=false and '{special_folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
+        items = results.get('files', []) + results2.get('files', [])
+    
+    print(len(items))
+    random_photo_link = random.choice(items)["webViewLink"]
+    return random_photo_link
 
 
 def index(request):
-    photos = get_photos()
-    random_key = random.choice(list(photos.keys()))
-    random_value = photos[random_key]
-    img_id = random_value.split("/")[-2]
+    special_photos_user = request.user.groups.filter(name="More Photos").exists()
+    photo = get_photos(special_photos_user)
+    img_id = photo.split("/")[-2]
     img_id = img_id.replace("d_", "")
     return render(request, "szymon/index.html", {
         "img_id": img_id,
