@@ -24,5 +24,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("szymon/", include("szymon.urls", namespace="szymon")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
-    path("pushups/", include("pushups.urls", namespace="pushups")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

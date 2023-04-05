@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "accounts",
     "core",
-    "pushups",
     "szymon",
 ]
 
