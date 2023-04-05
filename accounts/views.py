@@ -10,17 +10,16 @@ def register_view(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             send_mail(
-                subject="Thanks for registering in my App",
-                message="Thanks for registering. Hope you'll have fun.",
+                subject="Register in My App",
+                message=f"Thanks for registering {user.username.title()}. Hope you'll have fun.",
                 from_email=getenv("EMAIL"),
-                recipient_list=[request.POST["email"]],
+                recipient_list=[user.email],
             )
             return redirect("/accounts/login")
     else:
         form = CustomUserCreationForm()
-
     return render(request, "accounts/register.html", {"form": form})
 
 
