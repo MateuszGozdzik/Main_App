@@ -36,7 +36,7 @@ def get_photos(special_photos_user: bool):
 
 
 def index(request):
-    special_photos_user = request.user.groups.filter(name="More Photos").exists()
+    special_photos_user = request.user.groups.filter(name="special photos").exists()
     photo = get_photos(special_photos_user)
     img_id = photo.split("/")[-2]
     img_id = img_id.replace("d_", "")
