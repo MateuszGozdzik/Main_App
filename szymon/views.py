@@ -24,19 +24,22 @@ def get_photos(special_photos_user: bool):
     special_folder_id = '1eJ3tUbQHl5Ghl83phldn8NqaEXxI_Rvj'
 
     # Fetch the list of image files from the folder
-    results = service.files().list(q=f"mimeType contains 'image/' and trashed=false and '{folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
+    results = service.files().list(
+        q=f"mimeType contains 'image/' and trashed=false and '{folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
     items = results.get('files', [])
     if special_photos_user:
-        results2 = service.files().list(q=f"mimeType contains 'image/' and trashed=false and '{special_folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
+        results2 = service.files().list(
+            q=f"mimeType contains 'image/' and trashed=false and '{special_folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
         items = results.get('files', []) + results2.get('files', [])
-    
+
     print(len(items))
     random_photo_link = random.choice(items)["webViewLink"]
     return random_photo_link
 
 
 def index(request):
-    special_photos_user = request.user.groups.filter(name="special photos").exists()
+    special_photos_user = request.user.groups.filter(
+        name="special photos").exists()
     photo = get_photos(special_photos_user)
     img_id = photo.split("/")[-2]
     img_id = img_id.replace("d_", "")
