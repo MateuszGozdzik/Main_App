@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from tinymce import models as tinumce_models
 
 
 class Quote(models.Model):
@@ -10,7 +11,7 @@ class Quote(models.Model):
     )
 
     title = models.CharField(max_length=50)
-    # content = QuillField()
+    content = tinumce_models.HTMLField()
     author = models.CharField(max_length=50)
     language = models.CharField(max_length=2, choices=languages)
     added = models.DateTimeField(auto_now_add=True)
