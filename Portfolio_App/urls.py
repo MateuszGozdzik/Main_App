@@ -22,6 +22,7 @@ from django.urls import path, include
 urlpatterns = [
     path("", include("core.urls", namespace="core")),
     path('admin/', admin.site.urls),
-    path("szymon/", include("szymon.urls", namespace="szymon")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path("szymon/", include("szymon.urls", namespace="szymon")),
+    path("quotes/", include("quotes.urls", namespace="quotes")),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
