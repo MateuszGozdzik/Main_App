@@ -10,7 +10,7 @@ class Quote(models.Model):
     )
 
     title = models.CharField(max_length=50)
-    content = models.CharField(max_length=500)
+    # content = QuillField()
     author = models.CharField(max_length=50)
     language = models.CharField(max_length=2, choices=languages)
     added = models.DateTimeField(auto_now_add=True)

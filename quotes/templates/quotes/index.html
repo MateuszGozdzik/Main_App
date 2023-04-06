@@ -5,5 +5,10 @@ Quotes
 {% endblock %}
 
 {% block content %}
-Quotes
+<div>
+    <h1 class="text-2xl">Random Quote:</h1>
+    <h2 class="text-xl"> {{ random_quote.title }} </h2>
+    <h3 class="text-lg"> {{ random_quote.author }} </h3>
+    <!-- <p> {{ random_quote.content.html|safe }} </p> -->
+</div>
 {% endblock %}

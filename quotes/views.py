@@ -1,13 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from core.decorators import group_required
+from .models import Quote
 
-
+@group_required("quotes")
 def index(request):
-    if not request.user.groups.filter(name="quotes").exists():
-        return redirect("core:index")
-    return render(request, "quotes/index.html")
+    random_quote = Quote.objects.order_by("?").first()
+    # random_quote_content = random_quote.html
+
+    return render(request, "quotes/index.html", {
+        "random_quote": random_quote,
+    })
 
 
-# Random Quote
 
 # Add Quote
 
