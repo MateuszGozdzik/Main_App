@@ -10,8 +10,8 @@ class Quote(models.Model):
         ("PL", "Polish"),
     )
 
-    title = models.CharField(max_length=50)
-    content = tinumce_models.HTMLField()
+    title = models.CharField(max_length=50, unique=True)
+    content = tinumce_models.HTMLField(unique=True)
     author = models.CharField(max_length=50)
     language = models.CharField(max_length=2, choices=languages)
     added = models.DateTimeField(auto_now_add=True)

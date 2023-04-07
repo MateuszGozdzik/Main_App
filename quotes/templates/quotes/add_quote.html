@@ -1,0 +1,47 @@
+{% extends 'core/_base.html' %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block title %}
+Add Quote
+{% endblock %}
+
+{% block content %}
+<div class="w-8/12 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+    <h1 class="mb-6 text-3xl">Add Quote</h1>
+    <form action="{% url 'quotes:add_quote' %}" method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="inline-block mb-2">Quote Title</label><br>
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Quote Author</label><br>
+            {{ form.author }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Quote Language</label><br>
+            {{ form.language }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Quote</label><br>
+            {{ form.content }}
+        </div>
+
+        {% if form.errors or form.non_field_errors %}
+        <div class="mb-3 p-6 bg-red-100 rounded-xd">
+            {% for field in form %}
+            {{ field.errors }}
+            {% endfor %}
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+
+    </form>
+</div>
+{% endblock %}

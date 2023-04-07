@@ -1,6 +1,20 @@
 from django import forms
 from .models import Quote
+from tinymce import models as tinumce_models
+from tinymce.widgets import TinyMCE
 
-class MyModelForm(forms.ModelForm):
+INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
+
+
+class QuoteForm(forms.ModelForm):
+
     class Meta:
         model = Quote
+        fields = ("title", "content", "author", "language")
+
+        widgets = {
+            "title": forms.TextInput(attrs={"class": INPUT_CLASSES}),
+            "author": forms.TextInput(attrs={"class": INPUT_CLASSES}),
+            "language": forms.Select(attrs={"class": INPUT_CLASSES}),
+            "content": TinyMCE(attrs={"class": INPUT_CLASSES}),
+        }
