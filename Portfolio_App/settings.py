@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from os import getenv
 import os
+from celery.schedules import crontab
 
 load_dotenv()
 
@@ -175,3 +176,15 @@ DRIVE_PRIVATE_KEY = getenv("DRIVE_PRIVATE_KEY")
 DRIVE_CLIENT_EMAIL = getenv("DRIVE_CLIENT_EMAIL")
 DRIVE_CLIENT_ID = getenv("DRIVE_CLIENT_ID")
 DRIVE_CLIENT_X509_CERT_URL = getenv("DRIVE_CLIENT_X509_CERT_URL")
+
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0' 
+CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'my_daily_task': {
+        'task': 'quotes.tasks.my_daily_task',
+        'schedule': crontab(hour=0, minute=0),  # once a day at midnight
+    },
+}
