@@ -32,7 +32,6 @@ def get_photos(special_photos_user: bool):
             q=f"mimeType contains 'image/' and trashed=false and '{special_folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
         items = results.get('files', []) + results2.get('files', [])
 
-    print(len(items))
     random_photo_link = random.choice(items)["webViewLink"]
     return random_photo_link
 
