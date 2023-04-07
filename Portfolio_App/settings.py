@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "core",
     "szymon",
     "quotes",
+    "resetpassword",
 ]
 
 MIDDLEWARE = [
