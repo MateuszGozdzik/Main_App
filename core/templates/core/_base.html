@@ -44,7 +44,7 @@
                                 aria-current="page">Dashboard</a>
 
                             <a href="{% url 'szymon:index' %}"
-                                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Szymon</a>
+                                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Photos</a>
 
                             <a href="{% url 'quotes:index' %}"
                                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quotes</a>
@@ -98,7 +98,7 @@
                     aria-current="page">Dashboard</a>
 
                 <a href="{% url 'szymon:index' %}"
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Szymon</a>
+                    class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Photos</a>
 
                 <a href="{% url 'quotes:index' %}"
                     class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quotes</a>
@@ -114,6 +114,17 @@
     </div>
 
     {% block script %}
+    <script>
+        const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !expanded);
+            mobileMenu.classList.toggle('hidden', expanded);
+        });
+    </script>
+
     {% endblock %}
 </body>
 
