@@ -7,6 +7,7 @@ INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
 
 User = get_user_model()
 
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
         widget=forms.TextInput(
@@ -25,6 +26,7 @@ class LoginForm(AuthenticationForm):
             }
         )
     )
+
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -113,11 +115,23 @@ class ProfileSection1Form(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email")
+        fields = ("first_name", "last_name", "username", "email", "public")
 
         widgets = {
             "first_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "last_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "username": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "email": forms.EmailInput(attrs={"class": INPUT_CLASSES, "required": True}),
+            "public": forms.CheckboxInput(),
+        }
+
+
+class ProfileSection2Form(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ("quote_newsletter",)
+
+        widgets = {
+            "quote_newsletter": forms.CheckboxInput(),
         }

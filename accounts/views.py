@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import logout
-from .forms import CustomUserCreationForm, GravatarForm, ProfileSection1Form
+from .forms import CustomUserCreationForm, GravatarForm, ProfileSection1Form, ProfileSection2Form
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from os import getenv
@@ -50,6 +50,7 @@ def profile(request):
 @login_required
 def update_profile(request, section_id):
     user = request.user
+
     if section_id == 1:
         if request.method == "POST":
             form = ProfileSection1Form(request.POST, instance=user)
@@ -59,14 +60,30 @@ def update_profile(request, section_id):
                 user.last_name = temp_user.last_name
                 user.username = temp_user.username
                 user.email = temp_user.email
+                user.public = temp_user.public
                 user.save()
                 return redirect(reverse("accounts:profile"))
         else:
             form = ProfileSection1Form(instance=user)
+
+    if section_id == 2:
+        if request.method == "POST":
+            form = ProfileSection2Form(request.POST, instance=user)
+            if form.is_valid():
+                temp_user = form.save(commit=False)
+                user.quote_newsletter = temp_user.quote_newsletter
+                user.save()
+                return redirect(reverse("accounts:profile"))
+        else:
+            form = ProfileSection2Form(instance=user)
         return render(request, "accounts/profile.html", {
             "form": form,
             f"section{section_id}": True,
         })
+    return render(request, "accounts/profile.html", {
+        "form": form,
+        f"section{section_id}": True,
+    })
 
 
 @login_required

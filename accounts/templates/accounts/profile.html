@@ -3,27 +3,77 @@
 {% block title %}{{ user.username.title }}'s Profile{% endblock %}
 
 {% block content %}
-<div class="w-10/12 mx-auto bg-slate-200 rounded-lg flex p-2">
-    <div class="w-1/2 relative border border-gray-50">
-        {% if section1 %}
-        <form action="{% url 'accounts:update_profile' 1 %}" method="post">
+<div class="w-10/12 mx-auto bg-slate-200 rounded-lg p-2">
+    <div class="flex">
+        <div class="w-8/12 relative border border-gray-50 p-5 mb-2">
+            {% if section1 %}
+            <form action="{% url 'accounts:update_profile' 1 %}" method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2 text-lg">First Name</label><br>
+                    {{ form.first_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="inline-block mb-2 text-lg">Last Name</label><br>
+                    {{ form.last_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="inline-block mb-2 text-lg">username</label><br>
+                    {{ form.username }}
+                </div>
+                <div class="mb-3">
+                    <label class="inline-block mb-2 text-lg">Email</label><br>
+                    {{ form.email }}
+                </div>
+                <div class="mb-3">
+                    <label class="inline-block mb-2 text-lg">Public Account: </label>
+                    {{ form.public }}
+                </div>
+
+                {% if form.errors or form.non_field_errors %}
+                <div class="mb-3 p-6 bg-red-100 rounded-xd">
+                    {% for field in form %}
+                    {{ field.errors }}
+                    {% endfor %}
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+            </form>
+            {% else %}
+            <div>
+                {% if user.first_name or user.last_name %}
+                <div class="text-3xl font-bold mb-2">Personal Info</div>
+                <div class="text-xl font-semibold">{{ user.first_name.title }} {{ user.last_name.title }}
+                    ({{ user.username }})</div>
+                {% else %}
+                <div class="text-lg font-semibold">{{ user.username }}</div>
+                {% endif %}
+                <div class="text-xl font-semibold my-1">{{ user.email }}</div>
+                <div class="text-xl font-semibold my-1">Public account: {% if user.public %}✅{% else %}❌
+                    {% endif %}</div>
+                <a class="absolute bottom-1 right-1 text-blue-600" href="{% url 'accounts:update_profile' 1 %}">Edit</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="w-4/12">
+            <a href="{% url 'accounts:change_gravatar' %}" title="Change Gravatar">
+                <img class="w-1/2 mx-auto rounded-full" src="{{user.gravatar_link}}" alt="gravatar">
+            </a>
+        </div>
+    </div>
+
+    <!-- SECTION 2 -->
+
+    <div class="w-8/12 relative border border-gray-50 p-5 mb-2">
+        {% if section2 %}
+        <form action="{% url 'accounts:update_profile' 2 %}" method="post">
             {% csrf_token %}
 
             <div class="mb-3">
-                <label class="inline-block mb-2">First Name</label><br>
-                {{ form.first_name }}
-            </div>
-            <div class="mb-3">
-                <label class="inline-block mb-2">Last Name</label><br>
-                {{ form.last_name }}
-            </div>
-            <div class="mb-3">
-                <label class="inline-block mb-2">username</label><br>
-                {{ form.username }}
-            </div>
-            <div class="mb-3">
-                <label class="inline-block mb-2">Email</label><br>
-                {{ form.email }}
+                <label class="inline-block mb-2 text-lg">Quote Newsletter: </label>
+                {{ form.quote_newsletter }}
             </div>
 
             {% if form.errors or form.non_field_errors %}
@@ -37,23 +87,14 @@
             <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
         </form>
         {% else %}
-        <div class="m-5">
-            {% if user.first_name or user.last_name %}
-            <div class="text-3xl font-bold mb-2">Personal Info</div>
-            <div class="text-xl font-semibold">{{ user.first_name.title }} {{ user.last_name.title }}
-                ({{ user.username }})</div>
-            {% else %}
-            <div class="text-lg font-semibold">{{ user.username }}</div>
-            {% endif %}
-            <div class="text-xl font-semibold my-1">{{ user.email }}</div>
-            <a class="absolute bottom-1 right-1 text-blue-600" href="{% url 'accounts:update_profile' 1 %}">Edit</a>
+        <div>
+            <div class="text-3xl font-bold mb-2">Newsletters</div>
+            <div class="text-xl font-semibold my-1">Quote Newsletter: {% if user.quote_newsletter %}✅{% else %}❌
+                {% endif %}</div>
+            <a class="absolute bottom-1 right-1 text-blue-600" href="{% url 'accounts:update_profile' 2 %}">Edit</a>
         </div>
         {% endif %}
     </div>
-    <div class="w-1/2">
-        <a href="{% url 'accounts:change_gravatar' %}" title="Change Gravatar">
-            <img class="w-1/2 mx-auto rounded-full" src="{{user.gravatar_link}}" alt="gravatar">
-        </a>
-    </div>
+</div>
 </div>
 {% endblock %}
