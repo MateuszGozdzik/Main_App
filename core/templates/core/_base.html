@@ -73,7 +73,8 @@
                             <a href="{% url 'accounts:profile' %}"
                                 class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 overflow-hidden"
                                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                <img src="{{ request.user.gravatar_link }}" alt="gravatar" class="h-8 w-8 rounded">
+                                <img src="{{ user.gravatar_link }}" title="{{ user.username }}" alt="gravatar"
+                                    class="h-8 w-8 rounded">
                             </a>
                         </div>
                     </div>

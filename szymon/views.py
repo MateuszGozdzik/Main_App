@@ -3,6 +3,8 @@ from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 import random
 from django.conf import settings
+import requests
+import os
 
 
 def get_photos(special_photos_user: bool):
@@ -33,15 +35,33 @@ def get_photos(special_photos_user: bool):
         items = results.get('files', []) + results2.get('files', [])
 
     random_photo_link = random.choice(items)["webViewLink"]
-    return random_photo_link
+    img_id = random_photo_link.split("/")[-2]
+    img_id = img_id.replace("d_", "")
+    return f"https://drive.google.com/uc?id={img_id}"
+
+def get_photo_cat_api():
+    api_key = os.getenv("CAT_API_KEY")
+    url = f"https://api.thecatapi.com/v1/images/search?api_key={api_key}"
+    response = requests.get(url)
+    cat = response.json()[0]
+    return cat["url"]
 
 
 def index(request):
     special_photos_user = request.user.groups.filter(
         name="special photos").exists()
-    photo = get_photos(special_photos_user)
-    img_id = photo.split("/")[-2]
-    img_id = img_id.replace("d_", "")
+    simon_photos_user = request.user.groups.filter(
+        name="simon photos").exists()
+    if special_photos_user:
+        mode = "special"
+        photo = get_photos(special_photos_user)
+    elif simon_photos_user:
+        mode = "simon"
+        photo = get_photos(special_photos_user)
+    else:
+        mode = "cat"
+        photo = get_photo_cat_api()
     return render(request, "szymon/index.html", {
-        "img_id": img_id,
+        "photo_id": photo,
+        "mode": mode,
     })
