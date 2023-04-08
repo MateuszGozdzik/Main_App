@@ -14,5 +14,6 @@ urlpatterns = [
     path("reset_password/", PasswordResetView.as_view(), name="reset_password"),
     path("", views.index, name="index"),
     path("profile/", views.profile, name="profile"),
+    path("update_profile/<int:section_id>", views.update_profile, name="update_profile"),
     path("change-gravatar/", views.change_gravatar, name="change_gravatar"),
 ]

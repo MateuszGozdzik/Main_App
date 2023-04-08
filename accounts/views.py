@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import logout
-from .forms import CustomUserCreationForm, GravatarForm
+from .forms import CustomUserCreationForm, GravatarForm, ProfileSection1Form
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from os import getenv
@@ -44,9 +44,29 @@ def index(request):
 
 @login_required
 def profile(request):
-    user = request.user
-
     return render(request, "accounts/profile.html")
+
+
+@login_required
+def update_profile(request, section_id):
+    user = request.user
+    if section_id == 1:
+        if request.method == "POST":
+            form = ProfileSection1Form(request.POST, instance=user)
+            if form.is_valid():
+                temp_user = form.save(commit=False)
+                user.first_name = temp_user.first_name
+                user.last_name = temp_user.last_name
+                user.username = temp_user.username
+                user.email = temp_user.email
+                user.save()
+                return redirect(reverse("accounts:profile"))
+        else:
+            form = ProfileSection1Form(instance=user)
+        return render(request, "accounts/profile.html", {
+            "form": form,
+            f"section{section_id}": True,
+        })
 
 
 @login_required
@@ -55,8 +75,8 @@ def change_gravatar(request):
     if request.method == "POST":
         form = GravatarForm(request.POST)
         if form.is_valid():
-            temporary_user = form.save(commit=False)
-            user.gravatar_link = temporary_user.gravatar_link
+            temp_user = form.save(commit=False)
+            user.gravatar_link = temp_user.gravatar_link
             user.save()
             return redirect(reverse("accounts:profile"))
     else:

@@ -91,3 +91,33 @@ class GravatarForm(forms.ModelForm):
         widgets = {
             "gravatar_link": forms.URLInput(attrs={"class": INPUT_CLASSES}),
         }
+
+
+class ProfileSection1Form(forms.ModelForm):
+
+    def clean_username(self):
+        current_user = self.instance
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=current_user.pk).exists():
+            raise forms.ValidationError(
+                "This username is already taken. Please choose a different one.")
+        return username
+
+    def clean_email(self):
+        current_user = self.instance
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=current_user.pk).exists():
+            raise forms.ValidationError(
+                "This email is already registered. Please use a different one.")
+        return email
+
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "username", "email")
+
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
+            "last_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
+            "username": forms.TextInput(attrs={"class": INPUT_CLASSES}),
+            "email": forms.EmailInput(attrs={"class": INPUT_CLASSES, "required": True}),
+        }
