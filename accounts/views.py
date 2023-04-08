@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth import logout
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, GravatarForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from os import getenv
@@ -33,3 +34,33 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+
+@login_required
+def index(request):
+
+    return render(request, "accounts/index.html")
+
+
+@login_required
+def profile(request):
+    user = request.user
+
+    return render(request, "accounts/profile.html")
+
+
+@login_required
+def change_gravatar(request):
+    user = request.user
+    if request.method == "POST":
+        form = GravatarForm(request.POST)
+        if form.is_valid():
+            temporary_user = form.save(commit=False)
+            user.gravatar_link = temporary_user.gravatar_link
+            user.save()
+            return redirect(reverse("accounts:profile"))
+    else:
+        form = GravatarForm(instance=user)
+    return render(request, "accounts/grav_form.html", {
+        "form": form,
+    })

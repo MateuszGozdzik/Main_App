@@ -4,8 +4,7 @@
 
 
 # Todo:
-1. Add Users tab
-2. Maybe Friends
-3. User can be public or private, 
-4. Chat with user 
-5. optionals emails about messages
+- Maybe Friends
+- User can be public or private, 
+- Chat with user 
+- Optionals emails about messages

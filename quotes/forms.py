@@ -1,6 +1,5 @@
 from django import forms
 from .models import Quote
-from tinymce import models as tinumce_models
 from tinymce.widgets import TinyMCE
 
 INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"

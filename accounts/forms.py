@@ -1,13 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .models import CustomUser
 from django.contrib.auth import get_user_model
 
 
 INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
 
 User = get_user_model()
-
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -30,7 +28,7 @@ class LoginForm(AuthenticationForm):
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        model = CustomUser
+        model = User
         fields = ("username", "email", "password1", "password2")
 
     def clean_email(self):
@@ -82,3 +80,14 @@ class CustomUserCreationForm(UserCreationForm):
             }
         )
     )
+
+
+class GravatarForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ("gravatar_link",)
+
+        widgets = {
+            "gravatar_link": forms.URLInput(attrs={"class": INPUT_CLASSES}),
+        }

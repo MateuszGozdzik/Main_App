@@ -1,0 +1,24 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}{{ user.username.title }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="w-10/12 mx-auto bg-slate-200 rounded-lg flex p-2">
+    <div class="w-1/2">
+        <div class="m-5">
+            {% if user.first_name or user.last_name %}
+            <div class="text-2xl font-semibold">{{ user.first_name.title }} {{ user.last_name.title }}
+                ({{ user.username }})</div>
+            {% else %}
+            <div class="text-2xl font-semibold">{{ user.username }}</div>
+            {% endif %}
+            <div class="text-xl font-semibold">{{ user.email }}</div>
+        </div>
+    </div>
+    <div class="w-1/2">
+        <a href="{% url 'accounts:change_gravatar' %}" title="Change Gravatar">
+            <img class="w-1/2 mx-auto rounded-full" src="{{user.gravatar_link}}" alt="gravatar">
+        </a>
+    </div>
+</div>
+{% endblock %}
