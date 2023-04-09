@@ -1,0 +1,16 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}Public Users{% endblock %}
+
+{% block content %}
+
+<div>
+    {% for user in public_users %}
+    <div class="flex bg-slate-100">
+        <div class="m-2 p-2">{{ user.username }}</div>
+        <div class="m-2 p-2">{{ user.email }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

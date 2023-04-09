@@ -113,7 +113,7 @@
         {% endblock %}
     </div>
 
-    {% block script %}
+
     <script>
         const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -124,7 +124,7 @@
             mobileMenu.classList.toggle('hidden', expanded);
         });
     </script>
-
+    {% block script %}
     {% endblock %}
 </body>
 

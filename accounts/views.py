@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth import logout
 from .forms import CustomUserCreationForm, GravatarForm, ProfileSection1Form, ProfileSection2Form
@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from os import getenv
 import random
+from django.contrib.auth.models import Group
 import hashlib
 
 
@@ -38,7 +39,6 @@ def logout_view(request):
 
 @login_required
 def index(request):
-
     return render(request, "accounts/index.html")
 
 
@@ -60,22 +60,41 @@ def update_profile(request, section_id):
                 user.last_name = temp_user.last_name
                 user.username = temp_user.username
                 user.email = temp_user.email
-                user.public = temp_user.public
                 user.save()
+
+                public = form.cleaned_data.get("public")
+                group = Group.objects.filter(name="public account").first()
+                if group:
+                    if public == "True" and not user.groups.filter(name=group.name).exists():
+                        print("add")
+                        group.user_set.add(user)
+                    elif public == "False" and user.groups.filter(name=group.name).exists():
+                        print("del")
+                        group.user_set.remove(user)
+                else:
+                    return HttpResponse("Error: Group not found")
                 return redirect(reverse("accounts:profile"))
+
+
         else:
             form = ProfileSection1Form(instance=user)
 
     if section_id == 2:
         if request.method == "POST":
-            form = ProfileSection2Form(request.POST, instance=user)
+            form = ProfileSection2Form(request.POST)
             if form.is_valid():
-                temp_user = form.save(commit=False)
-                user.quote_newsletter = temp_user.quote_newsletter
-                user.save()
-                return redirect(reverse("accounts:profile"))
+                quote_newsletter = form.cleaned_data.get("quote_newsletter")
+                group = Group.objects.filter(name="quote newsletter").first()
+                if group:
+                    if quote_newsletter == "True" and not request.user.groups.filter(name=group.name).exists():
+                        group.user_set.add(request.user)
+                    elif quote_newsletter == "False" and request.user.groups.filter(name=group.name).exists():
+                        group.user_set.remove(request.user)
+                    return redirect(reverse("accounts:profile"))
+                else:
+                    return HttpResponse("Error: Group not found")
         else:
-            form = ProfileSection2Form(instance=user)
+            form = ProfileSection2Form()
         return render(request, "accounts/profile.html", {
             "form": form,
             f"section{section_id}": True,
@@ -101,3 +120,14 @@ def change_gravatar(request):
     return render(request, "accounts/grav_form.html", {
         "form": form,
     })
+
+# 
+# @login_required
+# def public_users(request):
+    
+#     # public_users = CustomUser.objects.filter(public=True).all().exclude(id = request.user.id)
+
+
+#     return render(request, "accounts/public_users.html", {
+#         # "public_users": public_users,
+#     })

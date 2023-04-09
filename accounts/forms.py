@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 
 INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
@@ -97,6 +98,8 @@ class GravatarForm(forms.ModelForm):
 
 class ProfileSection1Form(forms.ModelForm):
 
+    public = forms.ChoiceField(choices=((True, 'Public'), (False, 'Private')), widget=forms.RadioSelect)
+
     def clean_username(self):
         current_user = self.instance
         username = self.cleaned_data.get('username')
@@ -115,14 +118,13 @@ class ProfileSection1Form(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "public")
+        fields = ("first_name", "last_name", "username", "email")
 
         widgets = {
             "first_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "last_name": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "username": forms.TextInput(attrs={"class": INPUT_CLASSES}),
             "email": forms.EmailInput(attrs={"class": INPUT_CLASSES, "required": True}),
-            "public": forms.CheckboxInput(),
         }
 
 
@@ -130,8 +132,6 @@ class ProfileSection2Form(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("quote_newsletter",)
-
-        widgets = {
-            "quote_newsletter": forms.CheckboxInput(),
-        }
+        fields = ()
+    
+    quote_newsletter = forms.ChoiceField(choices=((True, 'Yes'), (False, 'No')), widget=forms.RadioSelect)
