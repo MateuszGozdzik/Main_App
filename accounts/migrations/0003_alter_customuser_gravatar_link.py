@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0002_customuser_gravatar_link'),
+        ("accounts", "0002_customuser_gravatar_link"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customuser',
-            name='gravatar_link',
+            model_name="customuser",
+            name="gravatar_link",
             field=models.URLField(null=True),
         ),
     ]

@@ -7,7 +7,7 @@ USER = get_user_model()
 register = template.Library()
 
 
-@register.filter(name='in_group')
+@register.filter(name="in_group")
 def in_group(user, group_name):
     try:
         group = Group.objects.get(name=group_name)
@@ -16,7 +16,7 @@ def in_group(user, group_name):
     return group in user.groups.all()
 
 
-@register.filter(name='friend')
+@register.filter(name="friend")
 def friend(user, friend_id):
     try:
         friend = USER.objects.get(id=friend_id)
@@ -25,7 +25,7 @@ def friend(user, friend_id):
     return friend in user.friends.filter(id=friend.id)
 
 
-@register.filter(name='requested_friend')
+@register.filter(name="requested_friend")
 def requested_friend(user, friend_id):
     try:
         friend = USER.objects.get(id=friend_id)

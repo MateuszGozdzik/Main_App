@@ -5,15 +5,14 @@ import tinymce.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('quotes', '0003_remove_quote_quote_quote_content'),
+        ("quotes", "0003_remove_quote_quote_quote_content"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='quote',
-            name='content',
+            model_name="quote",
+            name="content",
             field=tinymce.models.HTMLField(),
         ),
     ]

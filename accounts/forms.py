@@ -86,7 +86,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class GravatarForm(forms.ModelForm):
-
     class Meta:
         model = User
         fields = ("gravatar_link",)
@@ -97,23 +96,26 @@ class GravatarForm(forms.ModelForm):
 
 
 class ProfileSection1Form(forms.ModelForm):
-
-    public = forms.ChoiceField(choices=((True, 'Public'), (False, 'Private')), widget=forms.RadioSelect)
+    public = forms.ChoiceField(
+        choices=((True, "Public"), (False, "Private")), widget=forms.RadioSelect
+    )
 
     def clean_username(self):
         current_user = self.instance
-        username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get("username")
         if User.objects.filter(username=username).exclude(pk=current_user.pk).exists():
             raise forms.ValidationError(
-                "This username is already taken. Please choose a different one.")
+                "This username is already taken. Please choose a different one."
+            )
         return username
 
     def clean_email(self):
         current_user = self.instance
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exclude(pk=current_user.pk).exists():
             raise forms.ValidationError(
-                "This email is already registered. Please use a different one.")
+                "This email is already registered. Please use a different one."
+            )
         return email
 
     class Meta:
@@ -129,9 +131,10 @@ class ProfileSection1Form(forms.ModelForm):
 
 
 class ProfileSection2Form(forms.ModelForm):
-
     class Meta:
         model = User
         fields = ()
-    
-    quote_newsletter = forms.ChoiceField(choices=((True, 'Yes'), (False, 'No')), widget=forms.RadioSelect)
+
+    quote_newsletter = forms.ChoiceField(
+        choices=((True, "Yes"), (False, "No")), widget=forms.RadioSelect
+    )

@@ -19,12 +19,16 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 
-urlpatterns = [
-    path("", include("core.urls", namespace="core")),
-    path("accounts/", include("accounts.urls", namespace="accounts")),
-    path("szymon/", include("szymon.urls", namespace="szymon")),
-    path("quotes/", include("quotes.urls", namespace="quotes")),
-    path("tinymce/", include("tinymce.urls")),
-    path("resetpassword/", include("resetpassword.urls")),
-    path('admin/', admin.site.urls),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = (
+    [
+        path("", include("core.urls", namespace="core")),
+        path("accounts/", include("accounts.urls", namespace="accounts")),
+        path("szymon/", include("szymon.urls", namespace="szymon")),
+        path("quotes/", include("quotes.urls", namespace="quotes")),
+        path("tinymce/", include("tinymce.urls")),
+        path("resetpassword/", include("resetpassword.urls")),
+        path("admin/", admin.site.urls),
+    ]
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)

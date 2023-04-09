@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('quotes', '0002_quote_language'),
+        ("quotes", "0002_quote_language"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='quote',
-            name='quote',
+            model_name="quote",
+            name="quote",
         ),
         migrations.AddField(
-            model_name='quote',
-            name='content',
-            field=models.TextField(default='a'),
+            model_name="quote",
+            name="content",
+            field=models.TextField(default="a"),
             preserve_default=False,
         ),
     ]

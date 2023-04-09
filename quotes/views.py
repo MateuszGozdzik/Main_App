@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from core.decorators import group_required
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from .models import Quote
+from django.shortcuts import redirect, render
+from django.urls import reverse
+
 from accounts.models import CustomUser
-from django.conf import settings
-from .forms import QuoteForm, QuoteFiltersForm
-from django.http import JsonResponse
+from core.decorators import group_required
+
+from .forms import QuoteFiltersForm, QuoteForm
+from .models import Quote
 
 
 def index(request):
@@ -16,8 +17,7 @@ def index(request):
         form = QuoteFiltersForm(request.POST)
         if form.is_valid():
             language = form.cleaned_data["language"]
-            quote = Quote.objects.filter(
-                language=language).order_by("?").first()
+            quote = Quote.objects.filter(language=language).order_by("?").first()
     return display_quote(request, quote.id)
 
 
@@ -26,15 +26,23 @@ def display_quote(request, quote_id):
     try:
         quote = Quote.objects.get(id=quote_id)
     except:
-        return render(request, "core/index.html", {
-            "error": f"Quote with id {quote_id} doesn't exist."
-        })
+        return render(
+            request,
+            "core/index.html",
+            {"error": f"Quote with id {quote_id} doesn't exist."},
+        )
     form = QuoteFiltersForm()
-    return render(request, "quotes/index.html", {
-        "quote": quote,
-        "form": form,
-        "quote_is_favorite": request.user.favorite_quotes.filter(id=quote.id).exists(),
-    })
+    return render(
+        request,
+        "quotes/index.html",
+        {
+            "quote": quote,
+            "form": form,
+            "quote_is_favorite": request.user.favorite_quotes.filter(
+                id=quote.id
+            ).exists(),
+        },
+    )
 
 
 @group_required("quotes")
@@ -48,9 +56,7 @@ def add_quote(request):
             return redirect(reverse("quotes:display_quote", args=[quote.id]))
     else:
         form = QuoteForm()
-    return render(request, "quotes/add_quote.html", {
-        "form": form
-    })
+    return render(request, "quotes/add_quote.html", {"form": form})
 
 
 def daily_quote():

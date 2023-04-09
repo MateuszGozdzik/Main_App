@@ -6,7 +6,6 @@ INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
 
 
 class QuoteForm(forms.ModelForm):
-
     class Meta:
         model = Quote
         fields = ("title", "content", "author", "language")
@@ -18,8 +17,8 @@ class QuoteForm(forms.ModelForm):
             "content": TinyMCE(attrs={"class": INPUT_CLASSES}),
         }
 
-class QuoteFiltersForm(forms.ModelForm):
 
+class QuoteFiltersForm(forms.ModelForm):
     class Meta:
         model = Quote
         fields = ("language",)

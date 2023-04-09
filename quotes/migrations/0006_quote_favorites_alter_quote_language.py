@@ -5,21 +5,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('quotes', '0005_alter_quote_content_alter_quote_title'),
+        ("quotes", "0005_alter_quote_content_alter_quote_title"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='quote',
-            name='favorites',
-            field=models.ManyToManyField(blank=True, related_name='favorite_quotes', to=settings.AUTH_USER_MODEL),
+            model_name="quote",
+            name="favorites",
+            field=models.ManyToManyField(
+                blank=True, related_name="favorite_quotes", to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='quote',
-            name='language',
-            field=models.CharField(choices=[('EN', 'English'), ('PL', 'Polish')], default='EN', max_length=2),
+            model_name="quote",
+            name="language",
+            field=models.CharField(
+                choices=[("EN", "English"), ("PL", "Polish")],
+                default="EN",
+                max_length=2,
+            ),
         ),
     ]

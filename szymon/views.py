@@ -1,41 +1,52 @@
-from django.shortcuts import render
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-import random
-from django.conf import settings
-import requests
 import os
+import random
+
+import requests
+from django.conf import settings
+from django.shortcuts import render
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+
 from core.decorators import group_required
 
 
 def get_drive_photos(mode):
-    creds = Credentials.from_service_account_info({
-        "type": "service_account",
-        "project_id": settings.DRIVE_PROJECT_ID,
-        "private_key_id": settings.DRIVE_PRIVATE_KEY_ID,
-        "private_key": settings.DRIVE_PRIVATE_KEY,
-        "client_email": settings.DRIVE_CLIENT_EMAIL,
-        "client_id": settings.DRIVE_CLIENT_ID,
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": settings.DRIVE_CLIENT_X509_CERT_URL
-    })
-    service = build('drive', 'v3', credentials=creds)
+    creds = Credentials.from_service_account_info(
+        {
+            "type": "service_account",
+            "project_id": settings.DRIVE_PROJECT_ID,
+            "private_key_id": settings.DRIVE_PRIVATE_KEY_ID,
+            "private_key": settings.DRIVE_PRIVATE_KEY,
+            "client_email": settings.DRIVE_CLIENT_EMAIL,
+            "client_id": settings.DRIVE_CLIENT_ID,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": settings.DRIVE_CLIENT_X509_CERT_URL,
+        }
+    )
+    service = build("drive", "v3", credentials=creds)
 
     if mode == "simon":
         folder_id = os.getenv("DRIVE_SIMON_FOLDER")
     elif mode == "special":
         folder_id = os.getenv("DRIVE_SPECIAL_FOLDER")
 
-    results = service.files().list(
-        q=f"mimeType contains 'image/' and trashed=false and '{folder_id}' in parents", fields="nextPageToken, files(id, name, webViewLink)").execute()
-    items = results.get('files', [])
+    results = (
+        service.files()
+        .list(
+            q=f"mimeType contains 'image/' and trashed=false and '{folder_id}' in parents",
+            fields="nextPageToken, files(id, name, webViewLink)",
+        )
+        .execute()
+    )
+    items = results.get("files", [])
 
     random_photo_link = random.choice(items)["webViewLink"]
     img_id = random_photo_link.split("/")[-2]
     img_id = img_id.replace("d_", "")
     return f"https://drive.google.com/uc?id={img_id}"
+
 
 def get_cat_photos():
     api_key = os.getenv("CAT_API_KEY")
@@ -44,19 +55,23 @@ def get_cat_photos():
     cat = response.json()[0]
     return cat["url"]
 
-def render_photo(request, photo, index=None):
 
+def render_photo(request, photo, index=None):
     user_modes = ["cat"]
     if request.user.groups.filter(name="special photos").exists():
         user_modes.append("special")
     if request.user.groups.filter(name="simon photos").exists():
         user_modes.append("simon")
 
-    return render(request, "szymon/index.html", {
-        "photo_id": photo,
-        "modes": user_modes,
-        "index": index,
-    })
+    return render(
+        request,
+        "szymon/index.html",
+        {
+            "photo_id": photo,
+            "modes": user_modes,
+            "index": index,
+        },
+    )
 
 
 def index(request):
@@ -78,5 +93,3 @@ def special_photos(request):
 def simon_photos(request):
     photo = get_drive_photos("simon")
     return render_photo(request, photo)
-
-

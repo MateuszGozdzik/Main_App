@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('quotes', '0006_quote_favorites_alter_quote_language'),
+        ("quotes", "0006_quote_favorites_alter_quote_language"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='quote',
-            name='language',
-            field=models.CharField(choices=[('EN', 'English'), ('PL', 'Polish')], max_length=2),
+            model_name="quote",
+            name="language",
+            field=models.CharField(
+                choices=[("EN", "English"), ("PL", "Polish")], max_length=2
+            ),
         ),
     ]

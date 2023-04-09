@@ -4,18 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0008_customuser_requested_friends'),
+        ("accounts", "0008_customuser_requested_friends"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='customuser',
-            name='public',
+            model_name="customuser",
+            name="public",
         ),
         migrations.RemoveField(
-            model_name='customuser',
-            name='quote_newsletter',
+            model_name="customuser",
+            name="quote_newsletter",
         ),
     ]

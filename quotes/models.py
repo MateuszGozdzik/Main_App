@@ -1,10 +1,11 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 from tinymce import models as tinumce_models
 
 User = model = get_user_model()
-class Quote(models.Model):
 
+
+class Quote(models.Model):
     languages = (
         ("EN", "English"),
         ("PL", "Polish"),

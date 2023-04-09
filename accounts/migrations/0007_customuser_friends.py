@@ -5,15 +5,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0006_rename_simon_newsletter_customuser_public'),
+        ("accounts", "0006_rename_simon_newsletter_customuser_public"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customuser',
-            name='friends',
+            model_name="customuser",
+            name="friends",
             field=models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL),
         ),
     ]

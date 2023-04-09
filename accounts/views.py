@@ -1,15 +1,20 @@
-from django.shortcuts import render, redirect, HttpResponse
-from django.urls import reverse
-from django.contrib.auth import logout
-from .forms import CustomUserCreationForm, GravatarForm, ProfileSection1Form, ProfileSection2Form
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from os import getenv
-import random
-from django.contrib.auth.models import Group
 import hashlib
-from django.contrib.auth import get_user_model
+import random
+from os import getenv
 
+from django.contrib.auth import get_user_model, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.mail import send_mail
+from django.shortcuts import HttpResponse, redirect, render
+from django.urls import reverse
+
+from .forms import (
+    CustomUserCreationForm,
+    GravatarForm,
+    ProfileSection1Form,
+    ProfileSection2Form,
+)
 
 USER = get_user_model()
 
@@ -19,8 +24,7 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            hash = hashlib.md5(
-                str(random.getrandbits(128)).encode('utf-8')).hexdigest()
+            hash = hashlib.md5(str(random.getrandbits(128)).encode("utf-8")).hexdigest()
             user.gravatar_link = f"https://www.gravatar.com/avatar/{hash}?d=identicon"
             user.save()
         send_mail(
@@ -69,10 +73,16 @@ def update_profile(request, section_id):
                 public = form.cleaned_data.get("public")
                 group = Group.objects.filter(name="public account").first()
                 if group:
-                    if public == "True" and not user.groups.filter(name=group.name).exists():
+                    if (
+                        public == "True"
+                        and not user.groups.filter(name=group.name).exists()
+                    ):
                         print("add")
                         group.user_set.add(user)
-                    elif public == "False" and user.groups.filter(name=group.name).exists():
+                    elif (
+                        public == "False"
+                        and user.groups.filter(name=group.name).exists()
+                    ):
                         print("del")
                         group.user_set.remove(user)
                 else:
@@ -89,23 +99,37 @@ def update_profile(request, section_id):
                 quote_newsletter = form.cleaned_data.get("quote_newsletter")
                 group = Group.objects.filter(name="quote newsletter").first()
                 if group:
-                    if quote_newsletter == "True" and not request.user.groups.filter(name=group.name).exists():
+                    if (
+                        quote_newsletter == "True"
+                        and not request.user.groups.filter(name=group.name).exists()
+                    ):
                         group.user_set.add(request.user)
-                    elif quote_newsletter == "False" and request.user.groups.filter(name=group.name).exists():
+                    elif (
+                        quote_newsletter == "False"
+                        and request.user.groups.filter(name=group.name).exists()
+                    ):
                         group.user_set.remove(request.user)
                     return redirect(reverse("accounts:profile"))
                 else:
                     return HttpResponse("Error: Group not found")
         else:
             form = ProfileSection2Form()
-        return render(request, "accounts/profile.html", {
+        return render(
+            request,
+            "accounts/profile.html",
+            {
+                "form": form,
+                f"section{section_id}": True,
+            },
+        )
+    return render(
+        request,
+        "accounts/profile.html",
+        {
             "form": form,
             f"section{section_id}": True,
-        })
-    return render(request, "accounts/profile.html", {
-        "form": form,
-        f"section{section_id}": True,
-    })
+        },
+    )
 
 
 @login_required
@@ -120,27 +144,37 @@ def change_gravatar(request):
             return redirect(reverse("accounts:profile"))
     else:
         form = GravatarForm(instance=user)
-    return render(request, "accounts/grav_form.html", {
-        "form": form,
-    })
+    return render(
+        request,
+        "accounts/grav_form.html",
+        {
+            "form": form,
+        },
+    )
 
 
 @login_required
 def public_users(request):
+    public_users = USER.objects.filter(groups__name="public account").exclude(
+        id=request.user.id
+    )
 
-    public_users = USER.objects.filter(
-        groups__name="public account").exclude(id=request.user.id)
-
-    return render(request, "accounts/public_users.html", {
-        "public_users": public_users,
-    })
+    return render(
+        request,
+        "accounts/public_users.html",
+        {
+            "public_users": public_users,
+        },
+    )
 
 
 @login_required
 def send_friend_request(request, friend_id):
-
     def check(u1, u2):
-        if u1.requested_friends.filter(id=u2.id).exists() and u2.requested_friends.filter(id=u1.id).exists():
+        if (
+            u1.requested_friends.filter(id=u2.id).exists()
+            and u2.requested_friends.filter(id=u1.id).exists()
+        ):
             u1.requested_friends.remove(u2)
             u2.requested_friends.remove(u1)
             u1.friends.add(u2)
@@ -151,7 +185,10 @@ def send_friend_request(request, friend_id):
 
     user = request.user
     new_friend = USER.objects.filter(id=friend_id).first()
-    if not user.friends.filter(id=new_friend.id).exists() and not user.requested_friends.filter(id=new_friend.id).exists():
+    if (
+        not user.friends.filter(id=new_friend.id).exists()
+        and not user.requested_friends.filter(id=new_friend.id).exists()
+    ):
         user.requested_friends.add(new_friend)
         check(user, new_friend)
     return redirect(reverse("accounts:public_users"))
