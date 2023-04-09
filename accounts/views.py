@@ -38,7 +38,7 @@ def register_view(request):
 @login_required
 def logout_view(request):
     logout(request)
-    return redirect("/")
+    return redirect(reverse("accounts:login"))
 
 
 @login_required
@@ -144,11 +144,10 @@ def send_friend_request(request, friend_id):
             u1.requested_friends.remove(u2)
             u2.requested_friends.remove(u1)
             u1.friends.add(u2)
-            #TODO Wow, You are now friends. Send some message or sth.
+            # TODO Wow, You are now friends. Send some message or sth.
         else:
-            #TODO Send Notification to second user
+            # TODO Send Notification to second user
             pass
-
 
     user = request.user
     new_friend = USER.objects.filter(id=friend_id).first()
@@ -156,4 +155,3 @@ def send_friend_request(request, friend_id):
         user.requested_friends.add(new_friend)
         check(user, new_friend)
     return redirect(reverse("accounts:public_users"))
-
