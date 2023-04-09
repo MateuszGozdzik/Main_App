@@ -1,16 +1,47 @@
 {% extends 'core/_base.html' %}
+{% load custom_filters %}
 
 {% block title %}Public Users{% endblock %}
+{% block head %}
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<div>
-    {% for user in public_users %}
-    <div class="flex bg-slate-100">
-        <div class="m-2 p-2">{{ user.username }}</div>
-        <div class="m-2 p-2">{{ user.email }}</div>
-    </div>
-    {% endfor %}
+<div class="flex justify-center">
+    <table class="bg-slate-100 border-separate border border-slate-500 border-spacing-2 w-10/12">
+        <thead>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Photo</th>
+            <th>Friend</th>
+        </thead>
+        <tbody>
+            {% for user in public_users %}
+            <tr>
+                {% if user.first_name %}
+                <td>{{ user.first_name }}</td>
+                {% else %}
+                <td>{{ user.username }}</td>
+                {% endif %}
+                <td>{{ user.email }}</td>
+                <td><img class="mx-auto" src="{{ user.gravatar_link }}" alt="user gravatar"></td>
+
+                {% if request.user|friend:user.id %}
+                <td><a class="text-blue-600" href="#">Chat</a></td>
+                {% elif request.user|requested_friend:user.id %}
+                <td>Waiting</td>
+                {% else %}
+                <td><a class="text-blue-600" href="{% url 'accounts:friend_request' user.id %}">Add Friend</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

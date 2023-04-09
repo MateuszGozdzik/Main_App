@@ -8,6 +8,10 @@ from os import getenv
 import random
 from django.contrib.auth.models import Group
 import hashlib
+from django.contrib.auth import get_user_model
+
+
+USER = get_user_model()
 
 
 def register_view(request):
@@ -75,7 +79,6 @@ def update_profile(request, section_id):
                     return HttpResponse("Error: Group not found")
                 return redirect(reverse("accounts:profile"))
 
-
         else:
             form = ProfileSection1Form(instance=user)
 
@@ -121,13 +124,36 @@ def change_gravatar(request):
         "form": form,
     })
 
-# 
-# @login_required
-# def public_users(request):
-    
-#     # public_users = CustomUser.objects.filter(public=True).all().exclude(id = request.user.id)
+
+@login_required
+def public_users(request):
+
+    public_users = USER.objects.filter(
+        groups__name="public account").exclude(id=request.user.id)
+
+    return render(request, "accounts/public_users.html", {
+        "public_users": public_users,
+    })
 
 
-#     return render(request, "accounts/public_users.html", {
-#         # "public_users": public_users,
-#     })
+@login_required
+def send_friend_request(request, friend_id):
+
+    def check(u1, u2):
+        if u1.requested_friends.filter(id=u2.id).exists() and u2.requested_friends.filter(id=u1.id).exists():
+            u1.requested_friends.remove(u2)
+            u2.requested_friends.remove(u1)
+            u1.friends.add(u2)
+            #TODO Wow, You are now friends. Send some message or sth.
+        else:
+            #TODO Send Notification to second user
+            pass
+
+
+    user = request.user
+    new_friend = USER.objects.filter(id=friend_id).first()
+    if not user.friends.filter(id=new_friend.id).exists() and not user.requested_friends.filter(id=new_friend.id).exists():
+        user.requested_friends.add(new_friend)
+        check(user, new_friend)
+    return redirect(reverse("accounts:public_users"))
+

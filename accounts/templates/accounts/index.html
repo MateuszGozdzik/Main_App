@@ -1,9 +1,10 @@
 {% extends 'core/_base.html' %}
 
 {% block title %}
-    Users
+Users
 {% endblock %}
 
 {% block content %}
-    Hi
+<a class="px-5 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
+    href="{% url 'accounts:public_users' %}">Public Users</a>
 {% endblock %}
