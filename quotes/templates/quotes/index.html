@@ -7,14 +7,57 @@ Quotes
 {% block content %}
 <div class="flex justify-between">
     <div class="w-7/12">
-        <h1 class="text-3xl my-2">{% if random %}Random {% endif %}Quote:</h1>
+        <div class="flex">
+            <h1 class="text-3xl my-2">Random Quote</h1>
+            <a href="{% url 'quotes:favorite_quote' quote.id %}">{% if quote_is_favorite %}★{% else %}☆{% endif %}
+            </a>
+        </div>
+
         <h2 class="text-xl mb-2">{{ quote.title }}</h2>
         <h3 class="text-lg mb-2">@{{ quote.author }}</h3>
-        <p> {{ quote.content|safe }} </p>
+        <p> {{ quote.content|safe }}</p>
+
+        {% if not "/display-quote/" in request.path%}
+        <button class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
+            onclick="location.reload()">New Quote</button>
+        {% else %}
+        <div class="mt-20">
+            <a href="{% url 'quotes:index' %}"
+                class="px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">New Quote</a>
+        </div>
+        {% endif %}
+
+
     </div>
-    <div class="w-4/12 flex justify-end items-center">
-        <a class="px-5 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'quotes:add_quote' %}">Add Quote</a>
+    <div class="w-4/12 flex flex-col">
+        <div>
+            <a class="px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
+                href="{% url 'quotes:add_quote' %}">Add Quote</a>
+        </div>
+        <div class="mt-10 bg-slate-200 p-3 rounded-md pb-20">
+            <form action="{% url 'quotes:index' %}" method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2">Language</label><br>
+                    {{ form.language }}
+                </div>
+
+                {% if form.errors or form.non_field_errors %}
+                <div class="mb-3 p-6 bg-red-100 rounded-xd">
+                    {% for field in form %}
+                    {{ field.errors }}
+                    {% endfor %}
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                <div class="w-full relative">
+                    <button
+                        class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white absolute right-0">Generate
+                        Quote</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

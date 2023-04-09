@@ -17,3 +17,13 @@ class QuoteForm(forms.ModelForm):
             "language": forms.Select(attrs={"class": INPUT_CLASSES}),
             "content": TinyMCE(attrs={"class": INPUT_CLASSES}),
         }
+
+class QuoteFiltersForm(forms.ModelForm):
+
+    class Meta:
+        model = Quote
+        fields = ("language",)
+
+        widgets = {
+            "language": forms.Select(attrs={"class": INPUT_CLASSES}),
+        }

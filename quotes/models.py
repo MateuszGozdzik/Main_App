@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from tinymce import models as tinumce_models
 
-
+User = model = get_user_model()
 class Quote(models.Model):
 
     languages = (
@@ -16,7 +16,8 @@ class Quote(models.Model):
     language = models.CharField(max_length=2, choices=languages)
     added = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    favorites = models.ManyToManyField(User, related_name="favorite_quotes", blank=True)
 
     def __str__(self) -> str:
         return self.title
