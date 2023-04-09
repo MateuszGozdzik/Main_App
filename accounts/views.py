@@ -15,6 +15,7 @@ from .forms import (
     ProfileSection1Form,
     ProfileSection2Form,
 )
+from .models import Notification
 
 USER = get_user_model()
 
@@ -178,10 +179,27 @@ def send_friend_request(request, friend_id):
             u1.requested_friends.remove(u2)
             u2.requested_friends.remove(u1)
             u1.friends.add(u2)
-            # TODO Wow, You are now friends. Send some message or sth.
+
+            notification1 = Notification(
+                user=u1,
+                title="You got a new friend.",
+                content=f"{u2.username.title()} become your friend. Let's chat!",
+                link=f"/accounts/public-users#{u2.id}",
+            ).save()
+            notification2 = Notification(
+                user=u2,
+                title="You got a new friend.",
+                content=f"{u1.username.title()} become your friend. Let's chat!",
+                link=f"/accounts/public-users#{u1.id}",
+            ).save()
         else:
-            # TODO Send Notification to second user
-            pass
+            notification = Notification(
+                user=u2,
+                title="You have new friend request.",
+                content=f"{u1.username.title()} has sent you a friend request. Let's check it!",
+                link=f"/accounts/public-users#{u1.id}",
+            )
+            notification.save()
 
     user = request.user
     new_friend = USER.objects.filter(id=friend_id).first()
@@ -192,3 +210,16 @@ def send_friend_request(request, friend_id):
         user.requested_friends.add(new_friend)
         check(user, new_friend)
     return redirect(reverse("accounts:public_users"))
+
+
+@login_required
+def notification_view(request):
+    notifications = request.user.notifications.all()
+
+    return render(
+        request,
+        "accounts/notifications.html",
+        {
+            "notifications": notifications,
+        },
+    )

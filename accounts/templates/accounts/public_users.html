@@ -22,7 +22,7 @@
         </thead>
         <tbody>
             {% for user in public_users %}
-            <tr>
+            <tr id="{{ user.id }}">
                 {% if user.first_name %}
                 <td>{{ user.first_name }}</td>
                 {% else %}
@@ -35,6 +35,8 @@
                 <td><a class="text-blue-600" href="#">Chat</a></td>
                 {% elif request.user|requested_friend:user.id %}
                 <td>Waiting</td>
+                {% elif user|requested_friend:request.user.id %}
+                <td><a class="text-blue-600" href="{% url 'accounts:friend_request' user.id %}">Approve</a></td>
                 {% else %}
                 <td><a class="text-blue-600" href="{% url 'accounts:friend_request' user.id %}">Add Friend</a></td>
                 {% endif %}
