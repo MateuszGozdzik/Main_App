@@ -12,6 +12,10 @@ from .forms import QuoteSearchForm, QuoteForm
 from .models import Quote
 
 
+def get_all_quotes(user):
+    return Quote.objects.filter(Q(public=True) | Q(user=user)).all()
+
+
 @group_required("quotes")
 def index(request, quote_id=None):
     if quote_id:
@@ -28,10 +32,10 @@ def index(request, quote_id=None):
         if request.method == "POST":
             form = QuoteSearchForm(request.POST)
             if form.is_valid():
-                quote = form.search(request.user)
+                quote = form.search(request.user, get_all_quotes)
         else:
             form = QuoteSearchForm()
-            quote = Quote.objects.order_by("?").first()
+            quote = get_all_quotes(request.user).order_by("?").first()
 
     context = {
         "form": form,

@@ -3,7 +3,9 @@ from .models import Quote
 from tinymce.widgets import TinyMCE
 
 INPUT_CLASSES = "w-full py-4 px-6 rounded-xl"
-CHECKBOX_CLASSES = "absolute block w-6 h-6 rounded-full bg-white border-4 cursor-pointer right-0 top-0"
+CHECKBOX_CLASSES = (
+    "absolute block w-6 h-6 rounded-full bg-white border-4 cursor-pointer right-0 top-0"
+)
 
 
 class QuoteForm(forms.ModelForm):
@@ -15,7 +17,7 @@ class QuoteForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": INPUT_CLASSES, "required": True}),
             "author": forms.TextInput(attrs={"class": INPUT_CLASSES, "required": True}),
             "language": forms.Select(attrs={"class": INPUT_CLASSES, "required": True}),
-            "content": TinyMCE(attrs={"class": INPUT_CLASSES, "required": True}),
+            "content": TinyMCE(attrs={"class": INPUT_CLASSES}),
         }
 
 
@@ -42,15 +44,13 @@ class QuoteSearchForm(forms.ModelForm):
         widget=forms.CheckboxInput(attrs={"class": CHECKBOX_CLASSES}),
     )
 
-    def search(self, user):
+    def search(self, user, get_all_quotes):
         # Build a queryset with the selected filters
-        queryset = Quote.objects.all()
+        queryset = get_all_quotes(user)
         if self.cleaned_data["title"]:
             queryset = queryset.filter(title__iregex=self.cleaned_data["title"])
         if self.cleaned_data["content"]:
-            queryset = queryset.filter(
-                content__iregex=self.cleaned_data["content"]
-            )
+            queryset = queryset.filter(content__iregex=self.cleaned_data["content"])
         if self.cleaned_data["author"]:
             queryset = queryset.filter(author__iregex=self.cleaned_data["author"])
         if self.cleaned_data["language"]:
