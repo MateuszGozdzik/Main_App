@@ -55,9 +55,15 @@ def get_cat_photos():
     cat = response.json()[0]
     return cat["url"]
 
+def get_dog_photos():
+    url = "https://dog.ceo/api/breeds/image/random"
+    response = requests.get(url)
+    dog_url = response.json()["message"]
+    return dog_url
 
-def render_photo(request, photo, index=None):
-    user_modes = ["cat"]
+
+def render_photo(request, photo=None, index=None):
+    user_modes = ["cat", "dog"]
     if request.user.groups.filter(name="special photos").exists():
         user_modes.append("special")
     if request.user.groups.filter(name="simon photos").exists():
@@ -75,11 +81,15 @@ def render_photo(request, photo, index=None):
 
 
 def index(request):
-    return render_photo(request, "no-photo", index=True)
+    return render_photo(request, index=True)
 
 
 def cat_photos(request):
     photo = get_cat_photos()
+    return render_photo(request, photo)
+
+def dog_photos(request):
+    photo = get_dog_photos()
     return render_photo(request, photo)
 
 

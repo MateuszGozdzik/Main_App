@@ -8,16 +8,27 @@ Photos
 {% block content %}
 <div class="h-screen mt-5 pt-2">
     <div class="text-center mb-3">
+
+        {% if "cat" in modes %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:cat_photos' %}">CAT</a>
+            href="{% url 'szymon:cat_photos'  %}">CAT</a>
+        {% endif %}
+
+        {% if "dog" in modes %}
+        <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
+            href="{% url 'szymon:dog_photos'  %}">DOG</a>
+        {% endif %}
+
         {% if "simon" in modes %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:simon_photos' %}">SIMON</a>
+            href="{% url 'szymon:simon_photos'  %}">SIMON</a>
         {% endif %}
+
         {% if "special" in modes %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:special_photos' %}">SPECIAL</a>
+            href="{% url 'szymon:special_photos'  %}">SPECIAL</a>
         {% endif %}
+
     </div>
     {% if not index %}
     <div class="bg-emerald-300 h-5/6 w-full flex justify-center">
