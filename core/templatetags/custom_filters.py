@@ -38,6 +38,15 @@ def requested_friend(user, friend_id):
 def unread_notifications(user):
     try:
         notification_exists = user.notifications.filter(read=False).exists()
-    except USER.DoesNotExist:
+    except:
         return False
     return notification_exists
+
+
+@register.filter(name="favorite_quote")
+def favorite_quote(user, quote_id):
+    try:
+        user.favorite_quotes.get(id=quote_id)
+    except:
+        return False
+    return True

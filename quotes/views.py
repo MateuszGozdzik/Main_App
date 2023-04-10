@@ -8,18 +8,12 @@ from django.db.models import Q
 from accounts.models import CustomUser
 from core.decorators import group_required
 
-from .forms import QuoteFiltersForm, QuoteForm
+from .forms import QuoteSearchForm, QuoteForm
 from .models import Quote
-
-from random import choice
-
-
-def index(request):
-    return display_quote(request)
 
 
 @group_required("quotes")
-def display_quote(request, quote_id=None, params: dict = None):
+def index(request, quote_id=None):
     if quote_id:
         try:
             quote = Quote.objects.get(id=quote_id)
@@ -29,29 +23,21 @@ def display_quote(request, quote_id=None, params: dict = None):
                 "core/index.html",
                 {"error": f"Quote with id {quote_id} doesn't exist."},
             )
-    elif params:
-        filter_query = Q()
-        for param_name, param_value in params.items():
-            if param_value:
-                filter_query &= Q(**{param_name: param_value})
-
-        matching_quotes = Quote.objects.filter(filter_query)
-
-        if matching_quotes:
-            quote = choice(matching_quotes)
+        form = QuoteSearchForm()
     else:
-        quote = Quote.objects.order_by("?").first()
+        if request.method == "POST":
+            form = QuoteSearchForm(request.POST)
+            if form.is_valid():
+                quote = form.search(request.user)
+        else:
+            form = QuoteSearchForm()
+            quote = Quote.objects.order_by("?").first()
 
-    return render(
-        request,
-        "quotes/index.html",
-        {
-            "quote": quote,
-            "quote_is_favorite": request.user.favorite_quotes.filter(
-                id=quote.id
-            ).exists(),
-        },
-    )
+    context = {
+        "form": form,
+        "quote": quote,
+    }
+    return render(request, "quotes/index.html", context)
 
 
 @group_required("quotes")
@@ -68,7 +54,7 @@ def add_quote(request):
     return render(request, "quotes/add_quote.html", {"form": form})
 
 
-@login_required
+@group_required("quotes")
 def favorite_quote(request, quote_id):
     quote = Quote.objects.get(id=quote_id)
     if request.user.favorite_quotes.filter(id=quote_id).exists():
