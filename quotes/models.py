@@ -11,10 +11,10 @@ class Quote(models.Model):
         ("PL", "Polish"),
     )
 
-    title = models.CharField(max_length=50, unique=True)
+    title = models.CharField(max_length=50, unique=True, blank=True)
     content = tinumce_models.HTMLField(unique=True)
     author = models.CharField(max_length=50)
-    language = models.CharField(max_length=2, choices=languages)
+    language = models.CharField(max_length=2, choices=languages, blank=True)
     added = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
