@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from accounts.models import CustomUser, Notification
+from quotes.models import Quote
 
 
 def index(request):

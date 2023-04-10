@@ -11,13 +11,14 @@ CHECKBOX_CLASSES = (
 class QuoteForm(forms.ModelForm):
     class Meta:
         model = Quote
-        fields = ("title", "content", "author", "language")
+        fields = ("title", "content", "author", "language", "public")
 
         widgets = {
             "title": forms.TextInput(attrs={"class": INPUT_CLASSES, "required": True}),
             "author": forms.TextInput(attrs={"class": INPUT_CLASSES, "required": True}),
             "language": forms.Select(attrs={"class": INPUT_CLASSES, "required": True}),
             "content": TinyMCE(attrs={"class": INPUT_CLASSES}),
+            "public": forms.CheckboxInput(attrs={"class": CHECKBOX_CLASSES}),
         }
 
 

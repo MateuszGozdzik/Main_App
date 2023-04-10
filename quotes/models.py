@@ -11,6 +11,12 @@ class Quote(models.Model):
         ("PL", "Polish"),
     )
 
+    approve_choices = (
+        ("AP", "Approved"),
+        ("WT", "Waiting"),
+        ("DC", "Declined"),
+    )
+
     title = models.CharField(max_length=50, unique=True, blank=True)
     content = tinumce_models.HTMLField(unique=True, blank=True)
     author = models.CharField(max_length=50, blank=True)
@@ -20,6 +26,7 @@ class Quote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     favorites = models.ManyToManyField(User, related_name="favorite_quotes", blank=True)
     public = models.BooleanField(default=False)
+    approved = models.CharField(max_length=2, choices=approve_choices, default="WT")
 
     def __str__(self) -> str:
         return self.title

@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -11,9 +10,12 @@ from core.decorators import group_required
 from .forms import QuoteSearchForm, QuoteForm
 from .models import Quote
 
+from accounts.models import Notification
+from accounts.views import add_notification
+
 
 def get_all_quotes(user):
-    return Quote.objects.filter(Q(public=True) | Q(user=user)).all()
+    return Quote.objects.filter(Q(public=True, approved="AP") | Q(user=user)).all()
 
 
 @group_required("quotes")
@@ -52,6 +54,18 @@ def add_quote(request):
             quote = form.save(commit=False)
             quote.user = request.user
             quote.save()
+            if quote.public == False:
+                quote.approved = "AP"
+                quote.save()
+            elif quote.public == True:
+                notification = Notification(
+                    user=request.user,
+                    title="Your new quote is waiting for approval.",
+                    content=f"Your new quote ({quote.title}) is waiting for approval. We are going to inform you after next steps.",
+                    link=f"/quotes/display-quote/{quote.id}",
+                )
+                add_notification(notification)
+
             return redirect(reverse("quotes:display_quote", args=[quote.id]))
     else:
         form = QuoteForm()
