@@ -15,17 +15,22 @@
     <table class="bg-slate-100 border-separate border border-slate-500 border-spacing-2 w-10/12">
         <thead>
             <th>Title</th>
-            <th>Notification</th>
             <th>Date</th>
-            <th>Link</th>
+            <th>New</th>
         </thead>
         <tbody>
             {% for notification in notifications %}
             <tr>
-                <td>{{ notification.title }}</td>
-                <td>{{ notification.content }}</td>
+                <td><a class="text-blue-600" href="{% url 'accounts:notification_detail' notification.id %}">
+                        {{ notification.title }}</a></td>
                 <td>{{ notification.date }}</td>
-                <td><a class="text-blue-600" href="{{ notification.link }}">Go</a></td>
+                <td>
+                    {% if notification.read %}
+                    Read
+                    {% else %}
+                    Unread
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

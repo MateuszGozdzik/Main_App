@@ -32,3 +32,12 @@ def requested_friend(user, friend_id):
     except USER.DoesNotExist:
         return False
     return friend in user.requested_friends.filter(id=friend.id)
+
+@register.filter(name="unread_notifications")
+def unread_notifications(user):
+    try:
+        notification_exists = user.notifications.filter(read=False).exists()
+    except USER.DoesNotExist:
+        return False
+    return notification_exists
+

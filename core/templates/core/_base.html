@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,6 +9,31 @@
     <title>{% block title %}{% endblock %} | My App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     {% block head %}{% endblock %}
+    <style>
+        .with-dot {
+            position: relative;
+            /* Ensure pseudo-element is positioned relative to the link */
+        }
+
+        .with-dot::after {
+            content: '';
+            /* Add the pseudo-element */
+            position: absolute;
+            /* Position the pseudo-element absolutely */
+            top: 0.5rem;
+            /* Position the pseudo-element vertically */
+            right: 0.5rem;
+            /* Position the pseudo-element horizontally */
+            width: 0.5rem;
+            /* Set the width of the pseudo-element */
+            height: 0.5rem;
+            /* Set the height of the pseudo-element */
+            background-color: red;
+            /* Set the color of the pseudo-element */
+            border-radius: 50%;
+            /* Set the border radius to create a circle */
+        }
+    </style>
 </head>
 
 <body>
@@ -59,8 +85,8 @@
                     <a href="{% url 'accounts:logout' %}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         aria-current="page">Logout</a>
-                    <a type="button"
-                        class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    <a type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800
+                        {% if request.user|unread_notifications %} with-dot{% endif %}"
                         href="{% url 'accounts:notifications' %}">
                         <span class="sr-only">View notifications</span>
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

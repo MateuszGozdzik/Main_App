@@ -183,13 +183,13 @@ def send_friend_request(request, friend_id):
             notification1 = Notification(
                 user=u1,
                 title="You got a new friend.",
-                content=f"{u2.username.title()} become your friend. Let's chat!",
+                content=f"{u2.username.title()} became your friend. Let's chat!",
                 link=f"/accounts/public-users#{u2.id}",
             ).save()
             notification2 = Notification(
                 user=u2,
                 title="You got a new friend.",
-                content=f"{u1.username.title()} become your friend. Let's chat!",
+                content=f"{u1.username.title()} became your friend. Let's chat!",
                 link=f"/accounts/public-users#{u1.id}",
             ).save()
         else:
@@ -223,3 +223,40 @@ def notification_view(request):
             "notifications": notifications,
         },
     )
+
+
+@login_required
+def notification_detail(request, notification_id):
+    notification = Notification.objects.get(id=notification_id)
+    if notification.user != request.user:
+        return render(
+            request,
+            "core/index.html",
+            {
+                "error": "This wasn't your notification!",
+            },
+        )
+    if notification.read == False:
+        notification.read = True
+        notification.save()
+    return render(
+        request,
+        "accounts/notification_details.html",
+        {
+            "notification": notification,
+        },
+    )
+
+@login_required
+def delete_notification(request, notification_id):
+    notification = Notification.objects.get(id=notification_id)
+    if notification.user != request.user:
+        return render(
+            request,
+            "core/index.html",
+            {
+                "error": "This wasn't your notification!",
+            },
+        )
+    notification.delete()
+    return redirect(reverse("accounts:notifications"))
