@@ -3,10 +3,12 @@ from django.shortcuts import render, HttpResponse
 from accounts.models import CustomUser
 
 
-# Create your views here.
+
 def index(request):
     return render(request, "core/index.html")
 
+def health(request):
+    return HttpResponse("WORKING")
 
 def test(request):
     u1 = CustomUser.objects.get(username="u1")
@@ -20,3 +22,4 @@ def test(request):
 
 
     return HttpResponse("Done")
+
