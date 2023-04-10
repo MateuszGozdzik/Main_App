@@ -55,6 +55,7 @@ def get_cat_photos():
     cat = response.json()[0]
     return cat["url"]
 
+
 def get_dog_photos():
     url = "https://dog.ceo/api/breeds/image/random"
     response = requests.get(url)
@@ -87,6 +88,7 @@ def index(request):
 def cat_photos(request):
     photo = get_cat_photos()
     return render_photo(request, photo)
+
 
 def dog_photos(request):
     photo = get_dog_photos()

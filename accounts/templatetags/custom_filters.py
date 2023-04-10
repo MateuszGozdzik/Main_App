@@ -33,6 +33,7 @@ def requested_friend(user, friend_id):
         return False
     return friend in user.requested_friends.filter(id=friend.id)
 
+
 @register.filter(name="unread_notifications")
 def unread_notifications(user):
     try:
@@ -40,4 +41,3 @@ def unread_notifications(user):
     except USER.DoesNotExist:
         return False
     return notification_exists
-

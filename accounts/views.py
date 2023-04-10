@@ -20,6 +20,20 @@ from .models import Notification
 USER = get_user_model()
 
 
+def add_notification(notification):
+    notification.save()
+
+    if notification.user.groups.filter(name="email notifications").exists():
+        send_mail(
+            subject="New Notification",
+            message=f"You received new notification. Go Check: https://web-production-7633.up.railway.app{notification.link}",
+            from_email=getenv("EMAIL"),
+            recipient_list=[notification.user.email],
+        )
+        print("sent")
+    return True
+
+
 def register_view(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -185,13 +199,15 @@ def send_friend_request(request, friend_id):
                 title="You got a new friend.",
                 content=f"{u2.username.title()} became your friend. Let's chat!",
                 link=f"/accounts/public-users#{u2.id}",
-            ).save()
+            )
+            add_notification(notification1)
             notification2 = Notification(
                 user=u2,
                 title="You got a new friend.",
                 content=f"{u1.username.title()} became your friend. Let's chat!",
                 link=f"/accounts/public-users#{u1.id}",
-            ).save()
+            )
+            add_notification(notification2)
         else:
             notification = Notification(
                 user=u2,
@@ -199,7 +215,7 @@ def send_friend_request(request, friend_id):
                 content=f"{u1.username.title()} has sent you a friend request. Let's check it!",
                 link=f"/accounts/public-users#{u1.id}",
             )
-            notification.save()
+            add_notification(notification)
 
     user = request.user
     new_friend = USER.objects.filter(id=friend_id).first()
@@ -246,6 +262,7 @@ def notification_detail(request, notification_id):
             "notification": notification,
         },
     )
+
 
 @login_required
 def delete_notification(request, notification_id):

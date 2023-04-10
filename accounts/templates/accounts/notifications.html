@@ -20,7 +20,7 @@
         </thead>
         <tbody>
             {% for notification in notifications %}
-            <tr>
+            <tr id="{{ notification.id }}">
                 <td><a class="text-blue-600" href="{% url 'accounts:notification_detail' notification.id %}">
                         {{ notification.title }}</a></td>
                 <td>{{ notification.date }}</td>
