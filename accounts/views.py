@@ -230,7 +230,7 @@ def send_friend_request(request, friend_id):
 
 @login_required
 def notification_view(request):
-    notifications = request.user.notifications.all()
+    notifications = request.user.notifications.all().order_by("-date")
 
     return render(
         request,
