@@ -14,7 +14,7 @@ class Quote(models.Model):
     approve_choices = (
         ("AP", "Approved"),
         ("WT", "Waiting"),
-        ("DC", "Declined"),
+        ("RJ", "Rejected"),
     )
 
     title = models.CharField(max_length=50, unique=True, blank=True)

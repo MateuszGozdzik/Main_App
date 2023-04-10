@@ -1,0 +1,32 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}Approve Quotes{% endblock %}
+{% block head %}
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="flex justify-center">
+    <table class="bg-slate-100 border-separate border border-slate-500 border-spacing-2 w-10/12">
+        <thead>
+            <th>Title</th>
+            <th>Date</th>
+        </thead>
+        <tbody>
+            {% for quote in quotes %}
+            <tr id="{{ quote.id }}">
+                <td><a class="text-blue-600" href="{% url 'quotes:approve_quote_panel' quote.id %}">
+                        {{ quote.title }}</a></td>
+                <td>{{ quote.added }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -30,7 +30,6 @@ def add_notification(notification):
             from_email=getenv("EMAIL"),
             recipient_list=[notification.user.email],
         )
-        print("sent")
     return True
 
 

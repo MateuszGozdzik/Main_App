@@ -1,0 +1,19 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}Quote to Approve {{ notification.id }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-2">
+    <div>
+        <h1 class="text-3xl font-semibold mb-5">{{ quote.title }}</h1>
+        <h2 class="text-xl mb-10">{{ quote.date }}</h2>
+        <p>{{ quote.content|safe }}</p>
+    </div>
+    <div>
+        <a class="px-4 py-2 rounded bg-white text-green-700 border border-green-700 text-2xl"
+            href="{% url 'quotes:approve_quote' quote.id 'Approve' %}">Approve</a>
+        <a class="px-4 py-2 rounded bg-white text-red-700 border border-red-700 text-2xl"
+            href="{% url 'quotes:approve_quote' quote.id 'Reject' %}">Reject</a>
+    </div>
+</div>
+{% endblock %}

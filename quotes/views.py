@@ -66,6 +66,15 @@ def add_quote(request):
                 )
                 add_notification(notification)
 
+                for user in CustomUser.objects.filter(groups__name="approve quotes"):
+                    notification = Notification(
+                        user=user,
+                        title="New quote is waiting for approval.",
+                        content=f"New quote ({quote.title}) is waiting for approval.",
+                        link=f"/quotes/admin/approve-quotes#{quote.id}",
+                    )
+                    add_notification(notification)
+
             return redirect(reverse("quotes:display_quote", args=[quote.id]))
     else:
         form = QuoteForm()
@@ -80,6 +89,58 @@ def favorite_quote(request, quote_id):
     else:
         request.user.favorite_quotes.add(quote)
     return redirect(reverse("quotes:display_quote", args=[quote.id]))
+
+
+@group_required("approve quotes")
+def approve_quotes_panel(request):
+    quotes_to_approve = Quote.objects.filter(approved="WT")
+
+    return render(
+        request,
+        "quotes/approve_quotes_panel.html",
+        {
+            "quotes": quotes_to_approve,
+        },
+    )
+
+
+@group_required("approve quotes")
+def approve_quote_panel(request, quote_id):
+    quote = Quote.objects.get(id=quote_id)
+
+    return render(
+        request,
+        "quotes/approve_quote_details.html",
+        {
+            "quote": quote,
+        },
+    )
+
+
+@group_required("approve quotes")
+def approve_quote(request, quote_id, decision):
+    quote = Quote.objects.get(id=quote_id)
+
+    if decision == "Approve":
+        quote.approved = "AP"
+        title = "Your new quote has been approved."
+        message = f"Your new quote ({quote.title}) has been approved. We think it's going to enrich our collection."
+    elif decision == "Reject":
+        quote.approved = "RJ"
+        title = "Your new quote has been rejected."
+        message = f"Your new quote ({quote.title}) has been rejected. It didn't match our standards."
+
+    quote.save()
+
+    notification = Notification(
+        user=quote.user,
+        title=title,
+        content=message,
+        link=f"/quotes/display-quote/{quote.id}",
+    )
+    add_notification(notification)
+
+    return redirect(reverse("quotes:approve_quotes_panel"))
 
 
 def daily_quote():
