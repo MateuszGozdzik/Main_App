@@ -71,6 +71,12 @@ def profile(request):
 
 @login_required
 def update_profile(request, section_id):
+    def change_group(user, group, decision):
+        if decision == "True" and not user.groups.filter(name=group.name).exists():
+            group.user_set.add(user)
+        elif decision == "False" and user.groups.filter(name=group.name).exists():
+            group.user_set.remove(user)
+
     user = request.user
 
     if section_id == 1:
@@ -86,19 +92,8 @@ def update_profile(request, section_id):
 
                 public = form.cleaned_data.get("public")
                 group = Group.objects.filter(name="public account").first()
-                if group:
-                    if (
-                        public == "True"
-                        and not user.groups.filter(name=group.name).exists()
-                    ):
-                        print("add")
-                        group.user_set.add(user)
-                    elif (
-                        public == "False"
-                        and user.groups.filter(name=group.name).exists()
-                    ):
-                        print("del")
-                        group.user_set.remove(user)
+                change_group(user, group, public)
+
                 return redirect(reverse("accounts:profile"))
 
         else:
@@ -111,35 +106,11 @@ def update_profile(request, section_id):
             if form.is_valid():
                 quote_newsletter = form.cleaned_data.get("quote_newsletter")
                 quote_group = Group.objects.filter(name="quote newsletter").first()
-                if quote_group:
-                    if (
-                        quote_newsletter == "True"
-                        and not request.user.groups.filter(
-                            name=quote_group.name
-                        ).exists()
-                    ):
-                        quote_group.user_set.add(request.user)
-                    elif (
-                        quote_newsletter == "False"
-                        and request.user.groups.filter(name=quote_group.name).exists()
-                    ):
-                        quote_group.user_set.remove(request.user)
+                change_group(user, quote_group, quote_newsletter)
 
                 email_notifications = form.cleaned_data.get("email_notifications")
                 email_group = Group.objects.filter(name="email notifications").first()
-                if email_group:
-                    if (
-                        email_notifications == "True"
-                        and not request.user.groups.filter(
-                            name=email_group.name
-                        ).exists()
-                    ):
-                        email_group.user_set.add(request.user)
-                    elif (
-                        email_notifications == "False"
-                        and request.user.groups.filter(name=email_group.name).exists()
-                    ):
-                        email_group.user_set.remove(request.user)
+                change_group(user, email_group, email_notifications)
 
                 return redirect(reverse("accounts:profile"))
         else:
