@@ -12,26 +12,17 @@
     <style>
         .with-dot {
             position: relative;
-            /* Ensure pseudo-element is positioned relative to the link */
         }
 
         .with-dot::after {
             content: '';
-            /* Add the pseudo-element */
             position: absolute;
-            /* Position the pseudo-element absolutely */
             top: 0.5rem;
-            /* Position the pseudo-element vertically */
             right: 0.5rem;
-            /* Position the pseudo-element horizontally */
             width: 0.5rem;
-            /* Set the width of the pseudo-element */
             height: 0.5rem;
-            /* Set the height of the pseudo-element */
             background-color: red;
-            /* Set the color of the pseudo-element */
             border-radius: 50%;
-            /* Set the border radius to create a circle */
         }
     </style>
 </head>

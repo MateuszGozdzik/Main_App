@@ -46,28 +46,26 @@ Quotes
                     </label>
                 </div>
             </div>
-
-
             {% include 'core/_form_errors.html' %}
 
-            <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+            <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Generate
+                Quote</button>
 
         </form>
     </div>
 
     <div class="w-7/12">
         {% if quote %}
-        <div class="flex">
-            <h1 class="text-3xl my-2">Random Quote</h1>
+        <h2 class="text-2xl font-semibold mb-2">{{ quote.title }}
             <a href="{% url 'quotes:favorite_quote' quote.id %}">{% if request.user|favorite_quote:quote.id %}★
                 {% else%}☆{% endif %}
             </a>
-        </div>
-
-        <h2 class="text-xl mb-2">{{ quote.title }}</h2>
+        </h2>
         <h3 class="text-lg mb-2">@{{ quote.author }}</h3>
         <p> {{ quote.content|safe }}</p>
-
+        {% else %}
+        <h1 class="text-3xl font-semibold">No Quotes matching selected filters.</h1>
+        {% endif %}
         <div class="flex">
             <div class="mt-20">
                 <a href="{% url 'quotes:index' %}"
@@ -78,10 +76,6 @@ Quotes
                     class="ml-5 px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">Add Quote</a>
             </div>
         </div>
-        {% else %}
-        <h1 class="text-3xl font-semibold">No Quotes matching selected filters.</h1>
-        {% endif %}
-
     </div>
 </div>
 {% endblock %}
