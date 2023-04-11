@@ -99,35 +99,53 @@ def update_profile(request, section_id):
                     ):
                         print("del")
                         group.user_set.remove(user)
-                else:
-                    return HttpResponse("Error: Group not found")
                 return redirect(reverse("accounts:profile"))
 
         else:
-            form = ProfileSection1Form(instance=user)
+            public_bool = request.user.groups.filter(name="public account").exists()
+            form = ProfileSection1Form(instance=user, public_bool=public_bool)
 
     if section_id == 2:
         if request.method == "POST":
             form = ProfileSection2Form(request.POST)
             if form.is_valid():
                 quote_newsletter = form.cleaned_data.get("quote_newsletter")
-                group = Group.objects.filter(name="quote newsletter").first()
-                if group:
+                quote_group = Group.objects.filter(name="quote newsletter").first()
+                if quote_group:
                     if (
                         quote_newsletter == "True"
-                        and not request.user.groups.filter(name=group.name).exists()
+                        and not request.user.groups.filter(
+                            name=quote_group.name
+                        ).exists()
                     ):
-                        group.user_set.add(request.user)
+                        quote_group.user_set.add(request.user)
                     elif (
                         quote_newsletter == "False"
-                        and request.user.groups.filter(name=group.name).exists()
+                        and request.user.groups.filter(name=quote_group.name).exists()
                     ):
-                        group.user_set.remove(request.user)
-                    return redirect(reverse("accounts:profile"))
-                else:
-                    return HttpResponse("Error: Group not found")
+                        quote_group.user_set.remove(request.user)
+
+                email_notifications = form.cleaned_data.get("email_notifications")
+                email_group = Group.objects.filter(name="email notifications").first()
+                if email_group:
+                    if (
+                        email_notifications == "True"
+                        and not request.user.groups.filter(
+                            name=email_group.name
+                        ).exists()
+                    ):
+                        email_group.user_set.add(request.user)
+                    elif (
+                        email_notifications == "False"
+                        and request.user.groups.filter(name=email_group.name).exists()
+                    ):
+                        email_group.user_set.remove(request.user)
+
+                return redirect(reverse("accounts:profile"))
         else:
-            form = ProfileSection2Form()
+            quote_bool = request.user.groups.filter(name="quote newsletter").exists()
+            email_bool = request.user.groups.filter(name="email notifications").exists()
+            form = ProfileSection2Form(quote_bool=quote_bool, email_bool=email_bool)
         return render(
             request,
             "accounts/profile.html",

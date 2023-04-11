@@ -67,6 +67,11 @@
                 {% for radio in form.quote_newsletter %}
                 {{ radio }}
                 {% endfor %}
+                <br>
+                <label class="inline-block mb-2 text-lg">Email about Notifications: </label>
+                {% for radio in form.email_notifications %}
+                {{ radio }}
+                {% endfor %}
             </div>
             {% include 'core/_form_errors.html' %}
             <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
@@ -76,6 +81,9 @@
             <div class="text-3xl font-bold mb-2">Newsletters</div>
             <div class="text-xl font-semibold my-1">Quote Newsletter:
                 {% if user|in_group:"quote newsletter" %}✅{% else %}❌{% endif %}
+            </div>
+            <div class="text-xl font-semibold my-1">Email about Notifications:
+                {% if user|in_group:"email notifications" %}✅{% else %}❌{% endif %}
             </div>
             <a class="absolute bottom-1 right-1 text-blue-600" href="{% url 'accounts:update_profile' 2 %}">Edit</a>
             {% endif %}

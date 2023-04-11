@@ -129,6 +129,16 @@ class ProfileSection1Form(forms.ModelForm):
             "email": forms.EmailInput(attrs={"class": INPUT_CLASSES, "required": True}),
         }
 
+    def __init__(self, *args, **kwargs):
+        try:
+            public_bool = kwargs.pop("public_bool")
+        except:
+            public_bool = None
+
+        super(ProfileSection1Form, self).__init__(*args, **kwargs)
+        if public_bool != None:
+            self.fields["public"].initial = public_bool
+
 
 class ProfileSection2Form(forms.ModelForm):
     class Meta:
@@ -136,5 +146,26 @@ class ProfileSection2Form(forms.ModelForm):
         fields = ()
 
     quote_newsletter = forms.ChoiceField(
+        choices=((True, "Yes"), (False, "No")),
+        widget=forms.RadioSelect,
+    )
+    email_notifications = forms.ChoiceField(
         choices=((True, "Yes"), (False, "No")), widget=forms.RadioSelect
     )
+
+    def __init__(self, *args, **kwargs):
+        try:
+            quote_bool = kwargs.pop("quote_bool")
+        except:
+            quote_bool = None
+
+        try:
+            email_bool = kwargs.pop("email_bool")
+        except:
+            email_bool = None
+
+        super(ProfileSection2Form, self).__init__(*args, **kwargs)
+        if quote_bool != None:
+            self.fields["quote_newsletter"].initial = quote_bool
+        if email_bool != None:
+            self.fields["email_notifications"].initial = email_bool
