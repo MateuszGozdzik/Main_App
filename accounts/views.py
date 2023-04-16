@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
-from django.shortcuts import HttpResponse, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from .forms import (
@@ -264,4 +264,12 @@ def delete_notification(request, notification_id):
             },
         )
     notification.delete()
+    return redirect(reverse("accounts:notifications"))
+
+
+@login_required
+def delete_all_notifications(request):
+    notifications = Notification.objects.filter(user=request.user).all()
+    for notification in notifications:
+        notification.delete()
     return redirect(reverse("accounts:notifications"))

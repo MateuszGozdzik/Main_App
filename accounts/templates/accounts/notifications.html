@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="text-center mb-5">
+    <a class="px-5 py-2 rounded bg-white text-red-700 border border-red-700 text-2xl"
+        href="{% url 'accounts:delete_notifications' %}">Delete all Notifications</a>
+</div>
 <div class="flex justify-center">
     <table class="bg-slate-100 border-separate border border-slate-500 border-spacing-2 w-10/12">
         <thead>
