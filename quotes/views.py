@@ -10,8 +10,8 @@ from core.decorators import group_required
 from .forms import QuoteSearchForm, QuoteForm
 from .models import Quote
 
-from accounts.models import Notification
-from accounts.views import add_notification
+from notifications.models import Notification
+from notifications.views import add_notification
 
 
 def get_all_quotes(user):

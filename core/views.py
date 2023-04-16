@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from accounts.models import CustomUser, Notification
+from accounts.models import CustomUser
 from quotes.models import Quote
 
 

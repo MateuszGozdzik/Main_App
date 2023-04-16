@@ -15,22 +15,11 @@ from .forms import (
     ProfileSection1Form,
     ProfileSection2Form,
 )
-from .models import Notification
+
+from notifications.models import Notification
+from notifications.views import add_notification
 
 USER = get_user_model()
-
-
-def add_notification(notification):
-    notification.save()
-
-    if notification.user.groups.filter(name="email notifications").exists():
-        send_mail(
-            subject="New Notification",
-            message=f"You received new notification. Go Check: https://web-production-7633.up.railway.app{notification.link}",
-            from_email=getenv("EMAIL"),
-            recipient_list=[notification.user.email],
-        )
-    return True
 
 
 def register_view(request):
@@ -214,62 +203,3 @@ def send_friend_request(request, friend_id):
         user.requested_friends.add(new_friend)
         check(user, new_friend)
     return redirect(reverse("accounts:public_users"))
-
-
-@login_required
-def notification_view(request):
-    notifications = request.user.notifications.all().order_by("-date")
-
-    return render(
-        request,
-        "accounts/notifications.html",
-        {
-            "notifications": notifications,
-        },
-    )
-
-
-@login_required
-def notification_detail(request, notification_id):
-    notification = Notification.objects.get(id=notification_id)
-    if notification.user != request.user:
-        return render(
-            request,
-            "core/index.html",
-            {
-                "error": "This wasn't your notification!",
-            },
-        )
-    if notification.read == False:
-        notification.read = True
-        notification.save()
-    return render(
-        request,
-        "accounts/notification_details.html",
-        {
-            "notification": notification,
-        },
-    )
-
-
-@login_required
-def delete_notification(request, notification_id):
-    notification = Notification.objects.get(id=notification_id)
-    if notification.user != request.user:
-        return render(
-            request,
-            "core/index.html",
-            {
-                "error": "This wasn't your notification!",
-            },
-        )
-    notification.delete()
-    return redirect(reverse("accounts:notifications"))
-
-
-@login_required
-def delete_all_notifications(request):
-    notifications = Notification.objects.filter(user=request.user).all()
-    for notification in notifications:
-        notification.delete()
-    return redirect(reverse("accounts:notifications"))
