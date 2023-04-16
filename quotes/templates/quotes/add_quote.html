@@ -5,13 +5,19 @@
 {% endblock %}
 
 {% block title %}
+{% if quote %}
+Update Quote {{quote.id}}
+{% else %}
 Add Quote
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="w-8/12 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
     <h1 class="mb-6 text-3xl">Add Quote</h1>
-    <form action="{% url 'quotes:add_quote' %}" method="post">
+    <form method="post" {% if quote %} action="{% url 'quotes:update_quote' quote.id %}" {% else %}
+        action="{% url 'quotes:add_quote' %}" {% endif %}>
+
         {% csrf_token %}
 
         <div class="mb-3">
