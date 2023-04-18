@@ -5,6 +5,13 @@
 {% block title %}
 Quotes
 {% endblock %}
+{% block head %}
+<style>
+    ol {
+        list-style-type: decimal !important;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="flex justify-between">
@@ -68,12 +75,15 @@ Quotes
         {% endif %}
         <div class="flex">
             <div class="mt-20">
+                {% if quote %}
+                <a href="{% url 'quotes:update_quote' quote.id %}"
+                    class="px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">Update
+                    Quote</a>
+                {% endif %}
                 <a href="{% url 'quotes:index' %}"
                     class="px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">Random Quote</a>
-            </div>
-            <div class="mt-20">
                 <a href="{% url 'quotes:add_quote' %}"
-                    class="ml-5 px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">Add Quote</a>
+                    class="px-4 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl">Add Quote</a>
             </div>
         </div>
     </div>

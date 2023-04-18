@@ -9,6 +9,25 @@ CHECKBOX_CLASSES = (
 
 
 class QuoteForm(forms.ModelForm):
+
+    def clean_title(self):
+        current_quote = self.instance
+        title = self.cleaned_data.get("title")
+        if Quote.objects.filter(title=title).exclude(pk=current_quote.pk).exists():
+            raise forms.ValidationError(
+                "Quote with this title already exists"
+            )
+        return title
+
+    def clean_content(self):
+        current_quote = self.instance
+        content = self.cleaned_data.get("content")
+        if Quote.objects.filter(content=content).exclude(pk=current_quote.pk).exists():
+            raise forms.ValidationError(
+                "Quote with this content already exists"
+            )
+        return content
+
     class Meta:
         model = Quote
         fields = ("title", "content", "author", "language", "public")

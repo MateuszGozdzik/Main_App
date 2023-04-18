@@ -25,6 +25,7 @@ urlpatterns = (
         path("accounts/", include("accounts.urls", namespace="accounts")),
         path("szymon/", include("szymon.urls", namespace="szymon")),
         path("quotes/", include("quotes.urls", namespace="quotes")),
+        path("notifications/", include("notifications.urls", namespace="notifications")),
         path("tinymce/", include("tinymce.urls")),
         path("resetpassword/", include("resetpassword.urls")),
         path("admin/", admin.site.urls),

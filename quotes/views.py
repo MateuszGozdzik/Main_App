@@ -10,8 +10,8 @@ from core.decorators import group_required
 from .forms import QuoteSearchForm, QuoteForm
 from .models import Quote
 
-from accounts.models import Notification
-from accounts.views import add_notification
+from notifications.models import Notification
+from notifications.views import add_notification
 
 
 def get_all_quotes(user):
@@ -141,6 +141,48 @@ def approve_quote(request, quote_id, decision):
     add_notification(notification)
 
     return redirect(reverse("quotes:approve_quotes_panel"))
+
+
+@group_required("quotes")
+def update_quote(request, quote_id):
+    quote = Quote.objects.get(id=quote_id)
+    if request.method == "POST":
+        form = QuoteForm(request.POST, instance=quote)
+        if form.is_valid():
+            temp_quote = form.save(commit=False)
+            quote.user = request.user
+            quote.title = temp_quote.title
+            quote.author = temp_quote.author
+            quote.language = temp_quote.language
+            quote.public = temp_quote.public
+            quote.content = temp_quote.content
+            quote.approved = "WT"
+            quote.save()
+            if temp_quote.public == False:
+                quote.approved = "AP"
+                quote.save()
+            elif temp_quote.public == True:
+                notification = Notification(
+                    user=request.user,
+                    title="Your updated quote is waiting for approval.",
+                    content=f"Your new quote ({quote.title}) is waiting for approval. We are going to inform you after next steps.",
+                    link=f"/quotes/display-quote/{quote.id}",
+                )
+                add_notification(notification)
+
+                for user in CustomUser.objects.filter(groups__name="approve quotes"):
+                    notification = Notification(
+                        user=user,
+                        title="New quote is waiting for approval.",
+                        content=f"New quote ({quote.title}) is waiting for approval.",
+                        link=f"/quotes/admin/approve-quotes#{quote.id}",
+                    )
+                    add_notification(notification)
+
+            return redirect(reverse("quotes:display_quote", args=[quote.id]))
+    else:
+        form = QuoteForm(instance=quote)
+    return render(request, "quotes/add_quote.html", {"form": form, "quote": quote})
 
 
 def daily_quote():

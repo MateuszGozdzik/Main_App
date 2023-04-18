@@ -63,26 +63,18 @@ def get_dog_photos():
     return dog_url
 
 
-def render_photo(request, photo=None, index=None):
-    user_modes = ["cat", "dog"]
-    if request.user.groups.filter(name="special photos").exists():
-        user_modes.append("special")
-    if request.user.groups.filter(name="simon photos").exists():
-        user_modes.append("simon")
-
+def render_photo(request, photo=None):
     return render(
         request,
         "szymon/index.html",
         {
             "photo_id": photo,
-            "modes": user_modes,
-            "index": index,
         },
     )
 
 
 def index(request):
-    return render_photo(request, index=True)
+    return render_photo(request)
 
 
 def cat_photos(request):

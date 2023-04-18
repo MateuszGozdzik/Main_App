@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "szymon",
     "quotes",
     "resetpassword",
+    "notifications",
 ]
 
 MIDDLEWARE = [
