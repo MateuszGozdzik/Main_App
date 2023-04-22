@@ -17,6 +17,7 @@ class Todo(models.Model):
         get_user_model(), on_delete=models.CASCADE, related_name="todos"
     )
     added = models.DateTimeField(auto_now_add=True)
+    deadline = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=5, choices=status, default="N")
 
     def __str__(self) -> str:
