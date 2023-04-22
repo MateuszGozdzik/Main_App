@@ -1,0 +1,25 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}Add Todo{% endblock %}
+
+{% block content %}
+<div class="w-8/12 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+    <h1 class="mb-6 text-3xl">Add Todo</h1>
+    <form method="post" action="{% url 'todo:add_todo' %}">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="inline-block mb-2">Title</label><br>
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Text</label><br>
+            {{ form.content }}
+        </div>
+
+        {% include 'core/_form_errors.html' %}
+        <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'core/_base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<a class="px-5 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl absolute right-10"
+    href="{% url 'todo:add_todo' %}">Add Todo</a>
+
+<div>
+    <h1>Todos for Today</h1>
+    <ul>
+        {% for todo in todays_todos %}
+        <li>
+            <div>{{ todo.title }}</div>
+            <div>{{ todo.content }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

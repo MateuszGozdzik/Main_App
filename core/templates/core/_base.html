@@ -1,3 +1,4 @@
+{% load static %}
 {% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} | My App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
     {% block head %}{% endblock %}
     <style>
         .with-dot {
@@ -68,6 +69,9 @@
 
                             <a href="{% url 'accounts:index' %}"
                                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Users</a>
+
+                            <a href="{% url 'todo:index' %}"
+                                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Todo</a>
                         </div>
                     </div>
                 </div>
@@ -123,6 +127,9 @@
 
                 <a href="{% url 'accounts:index' %}"
                     class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Users</a>
+
+                <a href="{% url 'todo:index' %}"
+                    class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Todo</a>
             </div>
         </div>
     </nav>
