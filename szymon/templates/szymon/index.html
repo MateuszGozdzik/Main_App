@@ -21,10 +21,10 @@
 
         {% if request.user|in_group:"special photos" %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:special_photos'  %}">ZSŁ</a>
+            href="{% url 'szymon:special_photos'  %}">Special</a>
         {% endif %}
     </div>
-    
+
     {% if photo_id %}
     <div class="w-full h-5/6 flex justify-center">
         <img class="h-5/6 m-auto" src="{{ photo_id }}" alt="random photo">
