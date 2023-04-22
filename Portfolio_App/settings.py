@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "core",
     "szymon",
     "quotes",
+    "todo",
     "resetpassword",
     "notifications",
 ]
