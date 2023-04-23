@@ -9,19 +9,19 @@
     <div class="text-center mb-3">
 
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:cat_photos'  %}">CAT</a>
+            href="{% url 'photos:cat_photos'  %}">CAT</a>
 
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:dog_photos'  %}">DOG</a>
+            href="{% url 'photos:dog_photos'  %}">DOG</a>
 
         {% if request.user|in_group:"simon photos" %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:simon_photos'  %}">SIMON</a>
+            href="{% url 'photos:simon_photos'  %}">SIMON</a>
         {% endif %}
 
         {% if request.user|in_group:"special photos" %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
-            href="{% url 'szymon:special_photos'  %}">SPECIAL</a>
+            href="{% url 'photos:special_photos'  %}">SPECIAL</a>
         {% endif %}
     </div>
 

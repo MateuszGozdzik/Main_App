@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "tinymce",
     "accounts",
     "core",
-    "szymon",
+    "photos",
     "quotes",
     "todo",
     "resetpassword",

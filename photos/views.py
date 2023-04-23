@@ -66,7 +66,7 @@ def get_dog_photos():
 def render_photo(request, photo=None):
     return render(
         request,
-        "szymon/index.html",
+        "photos/index.html",
         {
             "photo_id": photo,
         },
