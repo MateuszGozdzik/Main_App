@@ -28,7 +28,7 @@ urlpatterns = (
         path(
             "notifications/", include("notifications.urls", namespace="notifications")
         ),
-        path("todo/", include("todo.urls", namespace="todo")),
+        path("todos/", include("todo.urls", namespace="todos")),
         path("tinymce/", include("tinymce.urls")),
         path("resetpassword/", include("resetpassword.urls")),
         path("admin/", admin.site.urls),
