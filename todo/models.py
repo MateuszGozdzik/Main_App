@@ -1,24 +1,23 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.timezone import now
 
 
 class Todo(models.Model):
     status = (
-        ("N", "Not Doing"),
+        # ("N", "Not Doing"),
         ("D", "Doing"),
-        ("W", "Waiting"),
-        ("P", "Preparing"),
+        # ("W", "Waiting"),
+        # ("P", "Preparing"),
         ("C", "Completed"),
     )
 
     title = models.CharField(max_length=50)
-    content = models.CharField(max_length=500, blank=True)
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="todos"
     )
-    added = models.DateTimeField(auto_now_add=True)
-    deadline = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=5, choices=status, default="N")
+    deadline = models.DateField(default=now)
+    status = models.CharField(max_length=5, choices=status, default="D")
 
     def __str__(self) -> str:
         return self.title
