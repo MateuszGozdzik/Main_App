@@ -18,7 +18,7 @@ class Quote(models.Model):
     )
 
     title = models.CharField(max_length=50, unique=True, blank=True)
-    content = tinumce_models.HTMLField(unique=True, blank=True)
+    content = tinumce_models.HTMLField(max_length=2000, unique=True, blank=True)
     author = models.CharField(max_length=50, blank=True)
     language = models.CharField(max_length=2, choices=languages, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)

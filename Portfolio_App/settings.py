@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "tinymce",
     "accounts",
     "core",
-    "szymon",
+    "photos",
     "quotes",
     "todo",
     "resetpassword",
@@ -95,7 +95,7 @@ WSGI_APPLICATION = "Portfolio_App.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": getenv("PGDATABASE"),
         "USER": getenv("PGUSER"),
         "PASSWORD": getenv("PGPASSWORD"),
