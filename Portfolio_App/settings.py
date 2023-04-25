@@ -96,11 +96,11 @@ WSGI_APPLICATION = "Portfolio_App.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": getenv("PGDATABASE"),
-        "USER": getenv("PGUSER"),
-        "PASSWORD": getenv("PGPASSWORD"),
-        "HOST": getenv("PGHOST"),
-        "PORT": getenv("PGPORT"),
+        "NAME": getenv("MYSQLDATABASE"),
+        "USER": getenv("MYSQLUSER"),
+        "PASSWORD": getenv("MYSQLPASSWORD"),
+        "HOST": getenv("MYSQLHOST"),
+        "PORT": getenv("MYSQLPORT"),
     }
 }
 
