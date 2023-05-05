@@ -14,7 +14,8 @@
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
             href="{% url 'photos:dog_photos'  %}">DOG</a>
 
-        {% if request.user|in_group:"simon photos" %}
+        {% comment %}
+        <!-- {% if request.user|in_group:"simon photos" %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
             href="{% url 'photos:simon_photos'  %}">SIMON</a>
         {% endif %}
@@ -22,7 +23,8 @@
         {% if request.user|in_group:"special photos" %}
         <a class="px-4 py-2 mt-20 rounded bg-white text-blue-700 border border-blue-700 text-2xl"
             href="{% url 'photos:special_photos'  %}">SPECIAL</a>
-        {% endif %}
+        {% endif %} -->
+        {% endcomment %}
     </div>
 
     {% if photo_id %}

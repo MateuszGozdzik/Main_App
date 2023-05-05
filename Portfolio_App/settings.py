@@ -95,12 +95,12 @@ WSGI_APPLICATION = "Portfolio_App.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": getenv("MYSQLDATABASE"),
-        "USER": getenv("MYSQLUSER"),
-        "PASSWORD": getenv("MYSQLPASSWORD"),
-        "HOST": getenv("MYSQLHOST"),
-        "PORT": getenv("MYSQLPORT"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": getenv("PGDATABASE"),
+        "USER": getenv("PGUSER"),
+        "PASSWORD": getenv("PGPASSWORD"),
+        "HOST": getenv("PGHOST"),
+        "PORT": getenv("PGPORT"),
     }
 }
 
@@ -180,12 +180,12 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Drive
 
-DRIVE_PROJECT_ID = getenv("DRIVE_PROJECT_ID")
-DRIVE_PRIVATE_KEY_ID = getenv("DRIVE_PRIVATE_KEY_ID")
-DRIVE_PRIVATE_KEY = getenv("DRIVE_PRIVATE_KEY")
-DRIVE_CLIENT_EMAIL = getenv("DRIVE_CLIENT_EMAIL")
-DRIVE_CLIENT_ID = getenv("DRIVE_CLIENT_ID")
-DRIVE_CLIENT_X509_CERT_URL = getenv("DRIVE_CLIENT_X509_CERT_URL")
+# DRIVE_PROJECT_ID = getenv("DRIVE_PROJECT_ID")
+# DRIVE_PRIVATE_KEY_ID = getenv("DRIVE_PRIVATE_KEY_ID")
+# DRIVE_PRIVATE_KEY = getenv("DRIVE_PRIVATE_KEY")
+# DRIVE_CLIENT_EMAIL = getenv("DRIVE_CLIENT_EMAIL")
+# DRIVE_CLIENT_ID = getenv("DRIVE_CLIENT_ID")
+# DRIVE_CLIENT_X509_CERT_URL = getenv("DRIVE_CLIENT_X509_CERT_URL")
 
 
 # Celery

@@ -5,29 +5,34 @@ from .forms import TodoForm
 from .models import Todo
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Q
 
 
 @group_required("todo")
 def index(request):
-    def get_todos(user, day):
-        return Todo.objects.filter(user=user, deadline=day).order_by("status")
+    class DayTodos:
+        def __init__(self, date, todos: list) -> None:
+            self.date = date
+            self.day_of_week = date.strftime("%A")
+            self.todos = todos
+
+    def get_todos(user, day, yesterday=False):
+        if yesterday:
+            todos = Todo.objects.filter(
+                Q(user=user, deadline=day) | Q(user=user, deadline__lt=day, status="D")
+            ).order_by("status")
+        else:
+            todos = Todo.objects.filter(user=user, deadline=day).order_by("status")
+        return DayTodos(day, todos)
 
     today = timezone.now().date()
+    todos = [
+        get_todos(request.user, day)
+        for day in [today + timedelta(days=i) for i in range(4)]
+    ]
     yesterday = today - timedelta(days=1)
-    tomorrow = today + timedelta(days=1)
-    post_tomorrow = today + timedelta(days=2)
+    todos.insert(0, get_todos(request.user, yesterday, yesterday=True))
 
-    yesterday_todos = Todo.objects.filter(user=request.user, deadline__lte=yesterday).order_by("-status")
-    today_todos = get_todos(request.user, today)
-    tomorrow_todos = get_todos(request.user, tomorrow)
-    post_tomorrow_todos = get_todos(request.user, post_tomorrow)
-
-    todos = {
-        yesterday: yesterday_todos,
-        today: today_todos,
-        tomorrow: tomorrow_todos,
-        post_tomorrow: post_tomorrow_todos,
-    }
     return render(
         request,
         "todo/index.html",

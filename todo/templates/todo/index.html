@@ -1,6 +1,6 @@
 {% extends 'core/_base.html' %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Todos{% endblock %}
 
 {% block content %}
 <!-- <a class="px-5 py-2 rounded bg-white text-blue-700 border border-blue-700 text-2xl absolute right-10"
@@ -10,15 +10,15 @@
 
 <div class="grid grid-cols-{{todos|length}}">
 
-    {% for day, day_todos in todos.items %}
+    {% for day in todos %}
     <div
         class="mx-2 {% if forloop.counter == 1 %} text-gray-500 {% elif forloop.counter == 2 %} text-red-500 {% endif %}">
         <div class="font-semibold text-center">
-            <h3 class="text-2xl">get day of week decorator</h3>
-            <h2 class="text-lg">{{ day }}</h2>
+            <h3 class="text-2xl">{{ day.day_of_week }}</h3>
+            <h2 class="text-lg">{{ day.date }}</h2>
         </div>
         <ul class="mt-10 text-lg">
-            {% for todo in day_todos %}
+            {% for todo in day.todos %}
             {% if todo.status == "C" %}
             <li class="border-b border-gray-200 line-through">{{ todo }}</li>
             {% else %}
