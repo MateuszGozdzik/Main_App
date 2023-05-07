@@ -1,3 +1,5 @@
+//npx tailwindcss-cli@latest build static/css/styles.css -o static/css/output.css
+
 module.exports = {
   theme: {
     extend: {
